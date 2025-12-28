@@ -1,6 +1,6 @@
 ﻿namespace Task_manager
 {
-    partial class ProjectListControl
+    partial class ProjectCard
     {
         /// <summary> 
         /// Vyžaduje se proměnná návrháře.
@@ -28,44 +28,31 @@
         /// </summary>
         private void InitializeComponent()
         {
-            label1 = new Label();
-            flpProjects = new FlowLayoutPanel();
+            lblProjectName = new Label();
             SuspendLayout();
             // 
-            // label1
+            // lblProjectName
             // 
-            label1.AutoSize = true;
-            label1.Dock = DockStyle.Top;
-            label1.Font = new Font("Segoe UI", 18F, FontStyle.Bold, GraphicsUnit.Point, 238);
-            label1.Location = new Point(0, 0);
-            label1.Name = "label1";
-            label1.Padding = new Padding(10);
-            label1.Size = new Size(150, 61);
-            label1.TabIndex = 2;
-            label1.Text = "Projects";
+            lblProjectName.AutoSize = true;
+            lblProjectName.Location = new Point(100, 30);
+            lblProjectName.Name = "lblProjectName";
+            lblProjectName.Size = new Size(50, 20);
+            lblProjectName.TabIndex = 0;
+            lblProjectName.Text = "label1";
             // 
-            // flpProjects
-            // 
-            flpProjects.Dock = DockStyle.Fill;
-            flpProjects.Location = new Point(0, 61);
-            flpProjects.Name = "flpProjects";
-            flpProjects.Size = new Size(562, 300);
-            flpProjects.TabIndex = 3;
-            // 
-            // ProjectListControl
+            // ProjectCard
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            Controls.Add(flpProjects);
-            Controls.Add(label1);
-            Name = "ProjectListControl";
-            Size = new Size(562, 361);
+            Controls.Add(lblProjectName);
+            Name = "ProjectCard";
+            Size = new Size(250, 130);
             ResumeLayout(false);
             PerformLayout();
         }
 
         #endregion
-        private Label label1;
-        private FlowLayoutPanel flpProjects;
+
+        private Label lblProjectName;
     }
 }
