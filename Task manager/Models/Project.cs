@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Task_manager
+namespace Task_manager.Models
 {
     // Это просто "контейнер" для текста. Здесь НЕТ кнопок и панелей.
     public class Project
