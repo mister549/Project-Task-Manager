@@ -6,39 +6,64 @@ using System.Drawing;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Task_manager.Models;
 
 namespace Task_manager
 {
+    // В файле ProjectsMenu.cs
     public partial class ProjectListControl : UserControl
     {
         public ProjectListControl()
         {
-            InitializeComponent();
+            InitializeComponent(); // БЕЗ ЭТОГО flpProjects ВСЕГДА БУДЕТ NULL
         }
-
         public void LoadProjects()
-        {
-            // 1. Очищаем панель, чтобы при обновлении проекты не дублировались визуально
-            flpProjects.Controls.Clear();
-
-            // 2. Получаем актуальный список проектов из нашего DataManager
-            var projects = DataManager.GetAllProjects();
-
-            // 3. Бежим циклом по списку и создаем карточки
-            foreach (var project in projects)
             {
-                // Создаем экземпляр твоей карточки
-                ProjectCard card = new ProjectCard();
+                flpProjects.Controls.Clear();
+                var projects = DataManager.GetAllProjects();        
 
-                // Передаем название проекта внутрь карточки
-                card.SetProjectData(project.Name);
+                foreach (var project in projects)
+                {
+                    ProjectCard projectCard = new ProjectCard();
+                    projectCard.SetProjectData(project); // Передаем объект проекта целиком
 
-                // Можно задать отступы, чтобы карточки не прилипали друг к другу
-                card.Margin = new System.Windows.Forms.Padding(10);
+                    // ПОДПИСЫВАЕМСЯ на клик по этой карточке
+                    projectCard.OnProjectClicked += (selectedProject) =>
+                    {
+                        ShowTasksForProject(selectedProject); // Переходим к задачам
+                    };
 
-                // Добавляем готовую карточку в FlowLayoutPanel
-                flpProjects.Controls.Add(card);
+                    projectCard.Margin = new Padding(10);
+                    flpProjects.Controls.Add(projectCard);
+                }
             }
-        }
+
+            // Метод для отображения задач конкретного проекта
+            private void ShowTasksForProject(Project project)
+            {
+                flpProjects.Controls.Clear();
+
+                // 1. Добавляем кнопку "Назад", чтобы вернуться к проектам
+                Button btnBack = new Button { Text = "<- Back", Width = 150, Height = 40 };
+                btnBack.Click += (s, e) => LoadProjects(); // Просто перезагружаем проекты
+                flpProjects.Controls.Add(btnBack);
+
+                // 2. Добавляем задачи проекта
+                if (project.Tasks != null && project.Tasks.Count > 0)
+                {
+                    foreach (var task in project.Tasks)
+                    {
+                        TaskCard taskCard = new TaskCard();
+                        taskCard.SetTaskData(task); // Передаем данные задачи
+                        flpProjects.Controls.Add(taskCard);
+                    }
+                }
+                else
+                {
+                    // Сообщение, если задач нет
+                    Label emptyLabel = new Label { Text = "This project hasnt task", AutoSize = true };
+                    flpProjects.Controls.Add(emptyLabel);
+                }
+            }
     }
 }

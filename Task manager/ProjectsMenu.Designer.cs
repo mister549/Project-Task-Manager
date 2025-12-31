@@ -49,7 +49,7 @@
             flpProjects.Dock = DockStyle.Fill;
             flpProjects.Location = new Point(0, 61);
             flpProjects.Name = "flpProjects";
-            flpProjects.Size = new Size(562, 300);
+            flpProjects.Size = new Size(560, 299);
             flpProjects.TabIndex = 3;
             // 
             // ProjectListControl
@@ -59,7 +59,7 @@
             Controls.Add(flpProjects);
             Controls.Add(label1);
             Name = "ProjectListControl";
-            Size = new Size(562, 361);
+            Size = new Size(560, 360);
             ResumeLayout(false);
             PerformLayout();
         }

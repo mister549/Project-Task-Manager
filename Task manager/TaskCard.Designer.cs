@@ -1,6 +1,6 @@
 ﻿namespace Task_manager
 {
-    partial class ProjectCard
+    partial class TaskCard
     {
         /// <summary> 
         /// Vyžaduje se proměnná návrháře.
@@ -28,25 +28,24 @@
         /// </summary>
         private void InitializeComponent()
         {
-            lblProjectName = new Label();
+            lblTaskTitle = new Label();
             SuspendLayout();
             // 
-            // lblProjectName
+            // lblTaskTitle
             // 
-            lblProjectName.AutoSize = true;
-            lblProjectName.Location = new Point(100, 30);
-            lblProjectName.Name = "lblProjectName";
-            lblProjectName.Size = new Size(50, 20);
-            lblProjectName.TabIndex = 0;
-            lblProjectName.Text = "label1";
+            lblTaskTitle.AutoSize = true;
+            lblTaskTitle.Location = new Point(103, 34);
+            lblTaskTitle.Name = "lblTaskTitle";
+            lblTaskTitle.Size = new Size(50, 20);
+            lblTaskTitle.TabIndex = 0;
+            lblTaskTitle.Text = "label1";
             // 
-            // ProjectCard
+            // TaskCard
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            Controls.Add(lblProjectName);
-            Cursor = Cursors.Default;
-            Name = "ProjectCard";
+            Controls.Add(lblTaskTitle);
+            Name = "TaskCard";
             Size = new Size(250, 130);
             ResumeLayout(false);
             PerformLayout();
@@ -54,6 +53,6 @@
 
         #endregion
 
-        private Label lblProjectName;
+        private Label lblTaskTitle;
     }
 }

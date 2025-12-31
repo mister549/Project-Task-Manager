@@ -50,14 +50,10 @@ namespace Task_manager
 
         private void btnCreateGlobal_Click(object sender, EventArgs e)
         {
-            AddProjectForm addForm = new AddProjectForm();
-
-            // If the project was successfully created
-            if (addForm.ShowDialog() == DialogResult.OK)
-            {
-                // Just refresh the list that is already inside the panel
-                projectsView.LoadProjects();
-            }
+            pnlContent.Controls.Clear();
+            CreateGlobalUC createUC = new CreateGlobalUC();
+            createUC.Dock = DockStyle.Fill;
+            pnlContent.Controls.Add(createUC);
         }
 
         private void btnProjects_Click(object sender, EventArgs e)

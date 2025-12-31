@@ -29,11 +29,12 @@
         private void InitializeComponent()
         {
             label1 = new Label();
-            textBox1 = new TextBox();
-            button1 = new Button();
+            txtProjectName = new TextBox();
+            btnCreateProject = new Button();
             label2 = new Label();
-            textBox2 = new TextBox();
-            listBox1 = new ListBox();
+            txtTaskName = new TextBox();
+            lbProjectSelector = new ListBox();
+            btnCreateTask = new Button();
             SuspendLayout();
             // 
             // label1
@@ -46,21 +47,22 @@
             label1.TabIndex = 0;
             label1.Text = "Projects";
             // 
-            // textBox1
+            // txtProjectName
             // 
-            textBox1.Location = new Point(27, 71);
-            textBox1.Name = "textBox1";
-            textBox1.Size = new Size(209, 27);
-            textBox1.TabIndex = 1;
+            txtProjectName.Location = new Point(27, 71);
+            txtProjectName.Name = "txtProjectName";
+            txtProjectName.Size = new Size(209, 27);
+            txtProjectName.TabIndex = 1;
             // 
-            // button1
+            // btnCreateProject
             // 
-            button1.Location = new Point(142, 116);
-            button1.Name = "button1";
-            button1.Size = new Size(94, 29);
-            button1.TabIndex = 2;
-            button1.Text = "button1";
-            button1.UseVisualStyleBackColor = true;
+            btnCreateProject.Location = new Point(142, 104);
+            btnCreateProject.Name = "btnCreateProject";
+            btnCreateProject.Size = new Size(94, 29);
+            btnCreateProject.TabIndex = 2;
+            btnCreateProject.Text = "Create Project";
+            btnCreateProject.UseVisualStyleBackColor = true;
+            btnCreateProject.Click += btnCreateProject_Click;
             // 
             // label2
             // 
@@ -72,30 +74,41 @@
             label2.TabIndex = 3;
             label2.Text = "Tasks";
             // 
-            // textBox2
+            // txtTaskName
             // 
-            textBox2.Location = new Point(27, 214);
-            textBox2.Name = "textBox2";
-            textBox2.Size = new Size(209, 27);
-            textBox2.TabIndex = 4;
+            txtTaskName.Location = new Point(27, 214);
+            txtTaskName.Name = "txtTaskName";
+            txtTaskName.Size = new Size(209, 27);
+            txtTaskName.TabIndex = 4;
             // 
-            // listBox1
+            // lbProjectSelector
             // 
-            listBox1.FormattingEnabled = true;
-            listBox1.Location = new Point(354, 214);
-            listBox1.Name = "listBox1";
-            listBox1.Size = new Size(150, 104);
-            listBox1.TabIndex = 5;
+            lbProjectSelector.FormattingEnabled = true;
+            lbProjectSelector.Location = new Point(321, 214);
+            lbProjectSelector.Name = "lbProjectSelector";
+            lbProjectSelector.Size = new Size(150, 104);
+            lbProjectSelector.TabIndex = 5;
+            // 
+            // btnCreateTask
+            // 
+            btnCreateTask.Location = new Point(142, 247);
+            btnCreateTask.Name = "btnCreateTask";
+            btnCreateTask.Size = new Size(94, 29);
+            btnCreateTask.TabIndex = 6;
+            btnCreateTask.Text = "Create Task";
+            btnCreateTask.UseVisualStyleBackColor = true;
+            btnCreateTask.Click += btnCreateTask_Click;
             // 
             // CreateGlobalUC
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            Controls.Add(listBox1);
-            Controls.Add(textBox2);
+            Controls.Add(btnCreateTask);
+            Controls.Add(lbProjectSelector);
+            Controls.Add(txtTaskName);
             Controls.Add(label2);
-            Controls.Add(button1);
-            Controls.Add(textBox1);
+            Controls.Add(btnCreateProject);
+            Controls.Add(txtProjectName);
             Controls.Add(label1);
             Name = "CreateGlobalUC";
             Size = new Size(529, 405);
@@ -106,10 +119,11 @@
         #endregion
 
         private Label label1;
-        private TextBox textBox1;
-        private Button button1;
+        private TextBox txtProjectName;
+        private Button btnCreateProject;
         private Label label2;
-        private TextBox textBox2;
-        private ListBox listBox1;
+        private TextBox txtTaskName;
+        private ListBox lbProjectSelector;
+        private Button btnCreateTask;
     }
 }

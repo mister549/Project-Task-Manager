@@ -1,6 +1,6 @@
 ﻿namespace Task_manager
 {
-    partial class ProjectCard
+    partial class TaskViewControl
     {
         /// <summary> 
         /// Vyžaduje se proměnná návrháře.
@@ -28,32 +28,31 @@
         /// </summary>
         private void InitializeComponent()
         {
-            lblProjectName = new Label();
+            chkIsCompleted = new CheckBox();
             SuspendLayout();
             // 
-            // lblProjectName
+            // chkIsCompleted
             // 
-            lblProjectName.AutoSize = true;
-            lblProjectName.Location = new Point(100, 30);
-            lblProjectName.Name = "lblProjectName";
-            lblProjectName.Size = new Size(50, 20);
-            lblProjectName.TabIndex = 0;
-            lblProjectName.Text = "label1";
+            chkIsCompleted.AutoSize = true;
+            chkIsCompleted.Location = new Point(0, 0);
+            chkIsCompleted.Name = "chkIsCompleted";
+            chkIsCompleted.Size = new Size(101, 24);
+            chkIsCompleted.TabIndex = 0;
+            chkIsCompleted.Text = "checkBox1";
+            chkIsCompleted.UseVisualStyleBackColor = true;
             // 
-            // ProjectCard
+            // TaskViewControl
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            Controls.Add(lblProjectName);
-            Cursor = Cursors.Default;
-            Name = "ProjectCard";
-            Size = new Size(250, 130);
+            Controls.Add(chkIsCompleted);
+            Name = "TaskViewControl";
             ResumeLayout(false);
             PerformLayout();
         }
 
         #endregion
 
-        private Label lblProjectName;
+        private CheckBox chkIsCompleted;
     }
 }
