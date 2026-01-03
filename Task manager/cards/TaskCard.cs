@@ -18,11 +18,8 @@ namespace Task_manager
         }
         public void SetTaskData(TaskItem task)
         {
-            // lblTaskTitle — это Label на твоей форме TaskCard
+            // (Твой существующий код для заголовка, например lblTitle.Text = task.Title;)
             lblTaskTitle.Text = task.Title;
-
-            // Если у тебя есть чекбокс для статуса:
-            // cbIsCompleted.Checked = task.IsCompleted;
         }
         private void TaskCard_Paint(object sender, PaintEventArgs e)
         {

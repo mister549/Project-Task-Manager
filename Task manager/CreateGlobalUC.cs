@@ -1,5 +1,4 @@
 ﻿using Task_manager.Models;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.Tab;
 
 namespace Task_manager
 {
@@ -17,12 +16,14 @@ namespace Task_manager
 
         private void LoadProjectsToSelector()
         {
-            lbProjectSelector.Items.Clear();
+            // Получаем список объектов
             var projects = DataManager.GetAllProjects();
-            foreach (var p in projects)
-            {
-                lbProjectSelector.Items.Add(p.Name);
-            }
+
+            // Привязываем данные правильно
+            lbProjectSelector.DataSource = null; // Сброс
+            lbProjectSelector.DataSource = projects;
+            lbProjectSelector.DisplayMember = "Name"; // Что видит пользователь
+            lbProjectSelector.ValueMember = "Id";    // Что мы получаем в коде
         }
 
         // --- ЛОГИКА ПРОЕКТОВ ---
@@ -37,7 +38,8 @@ namespace Task_manager
                 return;
             }
 
-            if (DataManager.IsProjectNameExists(name))
+            // В новом DataManager проверка имени может быть внутри Save или здесь
+            if (DataManager.GetAllProjects().Any(p => p.Name.Equals(name, StringComparison.OrdinalIgnoreCase)))
             {
                 MessageBox.Show($"Project '{name}' already exists!", "Duplicate Found", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
@@ -45,13 +47,13 @@ namespace Task_manager
 
             try
             {
-                Project newProject = new Project { Name = name };
-                DataManager.SaveProject(newProject);
+                // Используем новый метод сохранения (передаем только имя)
+                DataManager.SaveProject(name);
 
                 MessageBox.Show($"Project '{name}' created!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                 txtProjectName.Clear();
-                LoadProjectsToSelector(); // Сразу обновляем список справа
+                LoadProjectsToSelector();
             }
             catch (Exception ex)
             {
@@ -65,10 +67,9 @@ namespace Task_manager
         {
             string taskName = txtTaskName.Text.Trim();
 
-            // Проверяем, выбрал ли пользователь проект в ListBox
             if (lbProjectSelector.SelectedItem == null)
             {
-                MessageBox.Show("Please select a project from the list!", "Selection Missing", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Please select a project!", "Selection Missing", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -80,17 +81,21 @@ namespace Task_manager
 
             try
             {
-                string selectedProject = lbProjectSelector.SelectedItem.ToString();
+                var selectedProject = (Project)lbProjectSelector.SelectedItem;
+                int projectId = selectedProject.Id;
 
-                TaskItem newTask = new TaskItem
+                // --- НОВАЯ ПРОВЕРКА НА ДУБЛИКАТЫ ---
+                if (DataManager.IsTaskTitleExists(projectId, taskName))
                 {
-                    Title = taskName,
-                    ProjectName = selectedProject
-                };
+                    MessageBox.Show($"Task '{taskName}' already exists in this project!",
+                                    "Duplicate Task", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return; // Прерываем выполнение, задача не сохранится
+                }
 
-                DataManager.SaveTask(newTask);
+                // Если проверки прошли, сохраняем
+                DataManager.SaveTask(projectId, taskName);
 
-                MessageBox.Show($"Task added to {selectedProject}!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show($"Task added to {selectedProject.Name}!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 txtTaskName.Clear();
             }
             catch (Exception ex)
