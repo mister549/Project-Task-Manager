@@ -27,27 +27,6 @@ namespace Task_manager
             InitializeComponent();
         }
 
-        private void MainMenu_Load(object sender, EventArgs e)
-        {
-            ShowProjectList();
-        }
-
-        private void ShowProjectList()
-        {
-            // 1. Создаем новый экземпляр твоего контрола
-            projectsView = new ProjectListControl();
-
-            // 2. Растягиваем его на всю панель pnlContent (бывшая p2)
-            projectsView.Dock = DockStyle.Fill;
-
-            // 3. Очищаем панель на всякий случай и добавляем туда наш список
-            pnlContent.Controls.Clear();
-            pnlContent.Controls.Add(projectsView);
-
-            // 4. Загружаем проекты из JSON
-            projectsView.LoadProjects();
-        }
-
         private void btnCreateGlobal_Click(object sender, EventArgs e)
         {
             pnlContent.Controls.Clear();

@@ -12,16 +12,6 @@ namespace Task_manager
             ShowLogin();       
         }
         // 1. Метод, который очищает экран и ставит меню
-        private void OpenUserWindow(User user)
-        {
-            this.Controls.Clear(); // Удаляем LoginUC
-
-            // 2. Создаем Главное Меню и передаем в него юзера
-            MainMenuControl menu = new MainMenuControl(user);
-            menu.Dock = DockStyle.Fill;
-
-            this.Controls.Add(menu); // Показываем на экране
-        }
         private void ShowLogin()
         {
             this.Controls.Clear();
@@ -43,6 +33,16 @@ namespace Task_manager
 
             table.Controls.Add(login, 1, 1); // Кладем в центр (1,1)
             this.Controls.Add(table);
+        }
+        private void OpenUserWindow(User user)
+        {
+            this.Controls.Clear(); // Удаляем LoginUC
+
+            // 2. Создаем Главное Меню и передаем в него юзера
+            MainMenuControl menu = new MainMenuControl(user);
+            menu.Dock = DockStyle.Fill;
+
+            this.Controls.Add(menu); // Показываем на экране
         }
     }
 }
