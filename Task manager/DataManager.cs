@@ -13,6 +13,7 @@ namespace Task_manager
         private static string projectsFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "projects.json");
         private static string tasksFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "tasks.json");
         private static string subTasksFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "subtasks.json");
+        private static string userTasksFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "usertasks.json");
 
         private static JsonSerializerOptions _options = new JsonSerializerOptions { WriteIndented = true };
 
@@ -59,7 +60,7 @@ namespace Task_manager
             File.WriteAllText(tasksFile, System.Text.Json.JsonSerializer.Serialize(allTasks, _options));
 
             // АВТОМАТИЧЕСКИЙ ПЕРВЫЙ TO-DO
-            AddSubTask(nextTaskId, "Initial step");
+            AddSubTask(nextTaskId, "auto step");
         }
         public static List<TaskItem> GetTasksByProjectId(int projectId)
         {
@@ -87,6 +88,7 @@ namespace Task_manager
             if (task != null)
             {
                 task.Title = updatedTask.Title;
+                task.Description = updatedTask.Description;
                 task.IsCompleted = updatedTask.IsCompleted;
                 // Сохраняем обновленный список всех задач
                 File.WriteAllText(tasksFile, System.Text.Json.JsonSerializer.Serialize(allTasks, _options));
@@ -137,6 +139,57 @@ namespace Task_manager
                 parentTask.IsCompleted = allSubTasks.All(s => s.IsDone);
                 File.WriteAllText(tasksFile, System.Text.Json.JsonSerializer.Serialize(allTasks, _options));
             }
+        }
+
+        // --- РАБОТА С UserTask ---
+
+        public static List<UserTask> GetAllUserTasks()
+        {
+            if (!File.Exists(userTasksFile)) return new List<UserTask>();
+            string json = File.ReadAllText(userTasksFile);
+            return System.Text.Json.JsonSerializer.Deserialize<List<UserTask>>(json) ?? new List<UserTask>();
+        }
+
+        public static void AssignTaskToUser(int userId, int taskId)
+        {
+            var userTasks = GetAllUserTasks();
+
+            // Проверяем, не назначена ли уже эта задача этому пользователю
+            if (userTasks.Any(ut => ut.UserId == userId && ut.TaskId == taskId))
+            {
+                return; // Уже назначена
+            }
+
+            int nextId = userTasks.Count > 0 ? userTasks.Max(ut => ut.Id) + 1 : 1;
+
+            userTasks.Add(new UserTask
+            {
+                Id = nextId,
+                UserId = userId,
+                TaskId = taskId
+            });
+
+            File.WriteAllText(userTasksFile, System.Text.Json.JsonSerializer.Serialize(userTasks, _options));
+        }
+
+        public static void UnassignTaskFromUser(int userId, int taskId)
+        {
+            var userTasks = GetAllUserTasks();
+            userTasks.RemoveAll(ut => ut.UserId == userId && ut.TaskId == taskId);
+            File.WriteAllText(userTasksFile, System.Text.Json.JsonSerializer.Serialize(userTasks, _options));
+        }
+
+        public static List<int> GetUserTaskIds(int userId)
+        {
+            return GetAllUserTasks()
+                .Where(ut => ut.UserId == userId)
+                .Select(ut => ut.TaskId)
+                .ToList();
+        }
+
+        public static bool IsTaskAssignedToUser(int userId, int taskId)
+        {
+            return GetAllUserTasks().Any(ut => ut.UserId == userId && ut.TaskId == taskId);
         }
     }
 }

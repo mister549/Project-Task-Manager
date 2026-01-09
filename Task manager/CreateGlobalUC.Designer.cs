@@ -38,7 +38,9 @@
             label3 = new Label();
             txtStepInput = new TextBox();
             btnAddStepToList = new Button();
-            lbStepsPreview = new ListBox();
+            lbTasksPreview = new ListBox();
+            label4 = new Label();
+            label5 = new Label();
             SuspendLayout();
             // 
             // label1
@@ -129,19 +131,41 @@
             btnAddStepToList.Text = "Add Step";
             btnAddStepToList.UseVisualStyleBackColor = true;
             // 
-            // lbStepsPreview
+            // lbTasksPreview
             // 
-            lbStepsPreview.FormattingEnabled = true;
-            lbStepsPreview.Location = new Point(321, 348);
-            lbStepsPreview.Name = "lbStepsPreview";
-            lbStepsPreview.Size = new Size(150, 104);
-            lbStepsPreview.TabIndex = 10;
+            lbTasksPreview.FormattingEnabled = true;
+            lbTasksPreview.Location = new Point(321, 348);
+            lbTasksPreview.Name = "lbTasksPreview";
+            lbTasksPreview.Size = new Size(150, 104);
+            lbTasksPreview.TabIndex = 10;
+            // 
+            // label4
+            // 
+            label4.AutoSize = true;
+            label4.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 238);
+            label4.Location = new Point(321, 191);
+            label4.Name = "label4";
+            label4.Size = new Size(65, 20);
+            label4.TabIndex = 11;
+            label4.Text = "Projects";
+            // 
+            // label5
+            // 
+            label5.AutoSize = true;
+            label5.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 238);
+            label5.Location = new Point(321, 321);
+            label5.Name = "label5";
+            label5.Size = new Size(117, 20);
+            label5.TabIndex = 12;
+            label5.Text = "Tasks in project";
             // 
             // CreateGlobalUC
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            Controls.Add(lbStepsPreview);
+            Controls.Add(label5);
+            Controls.Add(label4);
+            Controls.Add(lbTasksPreview);
             Controls.Add(btnAddStepToList);
             Controls.Add(txtStepInput);
             Controls.Add(label3);
@@ -154,6 +178,7 @@
             Controls.Add(label1);
             Name = "CreateGlobalUC";
             Size = new Size(530, 540);
+            Load += CreateGlobalUC_Load;
             ResumeLayout(false);
             PerformLayout();
         }
@@ -170,6 +195,8 @@
         private Label label3;
         private TextBox txtStepInput;
         private Button btnAddStepToList;
-        private ListBox lbStepsPreview;
+        private ListBox lbTasksPreview;
+        private Label label4;
+        private Label label5;
     }
 }

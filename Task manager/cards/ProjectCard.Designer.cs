@@ -39,13 +39,13 @@
             lblProjectName.Size = new Size(50, 20);
             lblProjectName.TabIndex = 0;
             lblProjectName.Text = "label1";
+            lblProjectName.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // ProjectCard
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             Controls.Add(lblProjectName);
-            Cursor = Cursors.Default;
             Name = "ProjectCard";
             Size = new Size(250, 130);
             ResumeLayout(false);

@@ -10,6 +10,10 @@ namespace Task_manager
 
             // Загружаем список проектов при открытии
             LoadProjectsToSelector();
+
+            // Подписываемся на событие смены выбора проекта
+            lbProjectSelector.SelectedIndexChanged += LbProjectSelector_SelectedIndexChanged;
+            btnAddStepToList.Click += BtnAddStepToList_Click;
         }
 
         // --- ОБЩИЕ МЕТОДЫ ---
@@ -24,6 +28,31 @@ namespace Task_manager
             lbProjectSelector.DataSource = projects;
             lbProjectSelector.DisplayMember = "Name"; // Что видит пользователь
             lbProjectSelector.ValueMember = "Id";    // Что мы получаем в коде
+
+            // Убираем автоматический выбор первого проекта
+            lbProjectSelector.SelectedIndex = -1;
+        }
+
+        private void LoadTasksForSelectedProject()
+        {
+            lbTasksPreview.DataSource = null;
+
+            if (lbProjectSelector.SelectedItem == null)
+            {
+                return;
+            }
+
+            var selectedProject = (Project)lbProjectSelector.SelectedItem;
+            var projectTasks = DataManager.GetTasksByProjectId(selectedProject.Id);
+
+            lbTasksPreview.DataSource = projectTasks;
+            lbTasksPreview.DisplayMember = "Title";
+            lbTasksPreview.ValueMember = "Id";
+        }
+
+        private void LbProjectSelector_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            LoadTasksForSelectedProject();
         }
 
         // --- ЛОГИКА ПРОЕКТОВ ---
@@ -54,6 +83,7 @@ namespace Task_manager
 
                 txtProjectName.Clear();
                 LoadProjectsToSelector();
+                lbProjectSelector.SelectedIndex = -1;
             }
             catch (Exception ex)
             {
@@ -97,11 +127,52 @@ namespace Task_manager
 
                 MessageBox.Show($"Task added to {selectedProject.Name}!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 txtTaskName.Clear();
+                LoadTasksForSelectedProject();
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Error: {ex.Message}");
             }
+        }
+
+        // --- ЛОГИКА STEPS (SUBTASKS) ---
+
+        private void BtnAddStepToList_Click(object sender, EventArgs e)
+        {
+            string stepDescription = txtStepInput.Text.Trim();
+
+            if (lbTasksPreview.SelectedItem == null)
+            {
+                MessageBox.Show("Please select a task first!", "Selection Missing", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (string.IsNullOrEmpty(stepDescription))
+            {
+                MessageBox.Show("Please enter a step description!", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            try
+            {
+                var selectedTask = (TaskItem)lbTasksPreview.SelectedItem;
+                int taskId = selectedTask.Id;
+
+                // Сохраняем подзадачу
+                DataManager.AddSubTask(taskId, stepDescription);
+
+                MessageBox.Show($"Step added to task '{selectedTask.Title}'!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                txtStepInput.Clear();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error: {ex.Message}");
+            }
+        }
+
+        private void CreateGlobalUC_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

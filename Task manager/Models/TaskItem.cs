@@ -5,6 +5,7 @@
         public int Id { get; set; }
         public int ProjectId { get; set; } // Связь с проектом по ID
         public string Title { get; set; }
+        public string Description { get; set; } = "";
         public bool IsCompleted { get; set; } = false;
         public DateTime CreatedDate { get; set; } = DateTime.Now;
     }

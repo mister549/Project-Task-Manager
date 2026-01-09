@@ -32,7 +32,6 @@
             lblUserGreeting = new Label();
             btnProjects = new Button();
             btnMyTask = new Button();
-            btnMenu = new Button();
             btnCreateGlobal = new Button();
             pnlContent = new Panel();
             pnlSidebar.SuspendLayout();
@@ -44,7 +43,6 @@
             pnlSidebar.Controls.Add(lblUserGreeting);
             pnlSidebar.Controls.Add(btnProjects);
             pnlSidebar.Controls.Add(btnMyTask);
-            pnlSidebar.Controls.Add(btnMenu);
             pnlSidebar.Controls.Add(btnCreateGlobal);
             pnlSidebar.Dock = DockStyle.Left;
             pnlSidebar.Location = new Point(0, 0);
@@ -54,16 +52,21 @@
             // 
             // lblUserGreeting
             // 
-            lblUserGreeting.AutoSize = true;
-            lblUserGreeting.Location = new Point(45, 46);
+            lblUserGreeting.BackColor = Color.FromArgb(41, 128, 185);
+            lblUserGreeting.Dock = DockStyle.Top;
+            lblUserGreeting.Font = new Font("Segoe UI", 14F, FontStyle.Bold);
+            lblUserGreeting.ForeColor = Color.White;
+            lblUserGreeting.Location = new Point(0, 0);
             lblUserGreeting.Name = "lblUserGreeting";
-            lblUserGreeting.Size = new Size(50, 20);
+            lblUserGreeting.Padding = new Padding(15, 20, 15, 20);
+            lblUserGreeting.Size = new Size(250, 80);
             lblUserGreeting.TabIndex = 4;
-            lblUserGreeting.Text = "label1";
+            lblUserGreeting.Text = "User Profile";
+            lblUserGreeting.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // btnProjects
             // 
-            btnProjects.Location = new Point(45, 413);
+            btnProjects.Location = new Point(43, 303);
             btnProjects.Name = "btnProjects";
             btnProjects.Size = new Size(169, 70);
             btnProjects.TabIndex = 3;
@@ -73,22 +76,13 @@
             // 
             // btnMyTask
             // 
-            btnMyTask.Location = new Point(45, 330);
+            btnMyTask.Location = new Point(45, 223);
             btnMyTask.Name = "btnMyTask";
             btnMyTask.Size = new Size(169, 65);
             btnMyTask.TabIndex = 2;
             btnMyTask.Text = "My Task";
             btnMyTask.UseVisualStyleBackColor = true;
-            // 
-            // btnMenu
-            // 
-            btnMenu.Location = new Point(45, 232);
-            btnMenu.Name = "btnMenu";
-            btnMenu.Size = new Size(169, 69);
-            btnMenu.TabIndex = 1;
-            btnMenu.Text = "Menu";
-            btnMenu.UseVisualStyleBackColor = true;
-            btnMenu.Click += btnMenu_Click;
+            btnMyTask.Click += btnMyTask_Click;
             // 
             // btnCreateGlobal
             // 
@@ -117,7 +111,6 @@
             Name = "MainMenuControl";
             Size = new Size(1024, 768);
             pnlSidebar.ResumeLayout(false);
-            pnlSidebar.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -126,7 +119,6 @@
         private Panel pnlSidebar;
         private Button btnProjects;
         private Button btnMyTask;
-        private Button btnMenu;
         private Button btnCreateGlobal;
         private Panel pnlContent;
         private Label lblUserGreeting;
