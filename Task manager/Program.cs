@@ -11,7 +11,7 @@ namespace Task_manager
             // To customize application configuration such as set high DPI settings or default font,
             // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();
-            Application.Run(new Project());
+            Application.Run(new MainForm());
         }
     }
 }

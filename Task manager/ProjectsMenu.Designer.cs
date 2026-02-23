@@ -1,6 +1,6 @@
 ﻿namespace Task_manager
 {
-    partial class Control
+    partial class ProjectListControl
     {
         /// <summary> 
         /// Vyžaduje se proměnná návrháře.
@@ -28,31 +28,45 @@
         /// </summary>
         private void InitializeComponent()
         {
-            TogoTask = new Button();
+            label1 = new Label();
+            flpProjects = new FlowLayoutPanel();
             SuspendLayout();
             // 
-            // TogoTask
+            // label1
             // 
-            TogoTask.Location = new Point(19, 18);
-            TogoTask.Name = "TogoTask";
-            TogoTask.Size = new Size(210, 122);
-            TogoTask.TabIndex = 1;
-            TogoTask.Text = "Project";
-            TogoTask.TextAlign = ContentAlignment.TopCenter;
-            TogoTask.UseVisualStyleBackColor = true;
+            label1.AutoSize = true;
+            label1.Dock = DockStyle.Top;
+            label1.Font = new Font("Segoe UI", 18F, FontStyle.Bold, GraphicsUnit.Point, 238);
+            label1.Location = new Point(0, 0);
+            label1.Name = "label1";
+            label1.Padding = new Padding(10);
+            label1.Size = new Size(150, 61);
+            label1.TabIndex = 2;
+            label1.Text = "Projects";
             // 
-            // Control
+            // flpProjects
+            // 
+            flpProjects.AutoScroll = true;
+            flpProjects.Dock = DockStyle.Fill;
+            flpProjects.Location = new Point(0, 61);
+            flpProjects.Name = "flpProjects";
+            flpProjects.Size = new Size(560, 299);
+            flpProjects.TabIndex = 3;
+            // 
+            // ProjectListControl
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            Controls.Add(TogoTask);
-            Name = "Control";
-            Size = new Size(562, 361);
+            Controls.Add(flpProjects);
+            Controls.Add(label1);
+            Name = "ProjectListControl";
+            Size = new Size(560, 360);
             ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
-
-        private Button TogoTask;
+        private Label label1;
+        private FlowLayoutPanel flpProjects;
     }
 }

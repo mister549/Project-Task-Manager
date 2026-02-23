@@ -1,6 +1,6 @@
 ﻿namespace Task_manager
 {
-    partial class Control
+    partial class TaskCard
     {
         /// <summary> 
         /// Vyžaduje se proměnná návrháře.
@@ -28,31 +28,57 @@
         /// </summary>
         private void InitializeComponent()
         {
-            TogoTask = new Button();
+            lblTaskTitle = new Label();
+            Label = new Label();
+            lblTaskStatus = new Label();
             SuspendLayout();
             // 
-            // TogoTask
+            // lblTaskTitle
             // 
-            TogoTask.Location = new Point(19, 18);
-            TogoTask.Name = "TogoTask";
-            TogoTask.Size = new Size(210, 122);
-            TogoTask.TabIndex = 1;
-            TogoTask.Text = "Project";
-            TogoTask.TextAlign = ContentAlignment.TopCenter;
-            TogoTask.UseVisualStyleBackColor = true;
+            lblTaskTitle.AutoSize = true;
+            lblTaskTitle.Font = new Font("Arial", 11F, FontStyle.Bold);
+            lblTaskTitle.Location = new Point(10, 15);
+            lblTaskTitle.Name = "lblTaskTitle";
+            lblTaskTitle.Size = new Size(65, 22);
+            lblTaskTitle.TabIndex = 0;
+            lblTaskTitle.Text = "label1";
             // 
-            // Control
+            // Label
+            // 
+            Label.AutoSize = true;
+            Label.Font = new Font("Arial", 9F);
+            Label.Location = new Point(10, 49);
+            Label.Name = "Label";
+            Label.Size = new Size(54, 17);
+            Label.TabIndex = 1;
+            Label.Text = "Status:";
+            // 
+            // lblTaskStatus
+            // 
+            lblTaskStatus.AutoSize = true;
+            lblTaskStatus.Location = new Point(70, 46);
+            lblTaskStatus.Name = "lblTaskStatus";
+            lblTaskStatus.Size = new Size(50, 20);
+            lblTaskStatus.TabIndex = 2;
+            lblTaskStatus.Text = "label1";
+            // 
+            // TaskCard
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            Controls.Add(TogoTask);
-            Name = "Control";
-            Size = new Size(562, 361);
+            Controls.Add(lblTaskStatus);
+            Controls.Add(lblTaskTitle);
+            Controls.Add(Label);
+            Name = "TaskCard";
+            Size = new Size(250, 130);
             ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
 
-        private Button TogoTask;
+        private Label lblTaskTitle;
+        private Label Label;
+        private Label lblTaskStatus;
     }
 }

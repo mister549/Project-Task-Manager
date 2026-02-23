@@ -1,6 +1,6 @@
 ﻿namespace Task_manager
 {
-    partial class Project
+    partial class MainForm
     {
         /// <summary>
         ///  Required designer variable.
@@ -28,30 +28,38 @@
         /// </summary>
         private void InitializeComponent()
         {
-            ContentPanel = new Panel();
+            tableLayoutPanel1 = new TableLayoutPanel();
             SuspendLayout();
             // 
-            // ContentPanel
+            // tableLayoutPanel1
             // 
-            ContentPanel.Dock = DockStyle.Fill;
-            ContentPanel.Location = new Point(0, 0);
-            ContentPanel.Name = "ContentPanel";
-            ContentPanel.Size = new Size(800, 450);
-            ContentPanel.TabIndex = 0;
+            tableLayoutPanel1.ColumnCount = 2;
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            tableLayoutPanel1.Dock = DockStyle.Fill;
+            tableLayoutPanel1.Location = new Point(0, 0);
+            tableLayoutPanel1.Name = "tableLayoutPanel1";
+            tableLayoutPanel1.RowCount = 2;
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
+            tableLayoutPanel1.Size = new Size(1006, 721);
+            tableLayoutPanel1.TabIndex = 0;
             // 
-            // Project
+            // MainForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(800, 450);
-            Controls.Add(ContentPanel);
-            Name = "Project";
+            ClientSize = new Size(1006, 721);
+            Controls.Add(tableLayoutPanel1);
+            Name = "MainForm";
+            StartPosition = FormStartPosition.Manual;
             Text = "Project";
+            WindowState = FormWindowState.Maximized;
             ResumeLayout(false);
         }
 
         #endregion
 
-        private Panel ContentPanel;
+        private TableLayoutPanel tableLayoutPanel1;
     }
 }

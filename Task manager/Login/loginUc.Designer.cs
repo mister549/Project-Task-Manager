@@ -28,94 +28,143 @@
         /// </summary>
         private void InitializeComponent()
         {
+            panel1 = new Panel();
+            lblTitle = new Label();
+            lblSubtitle = new Label();
+            label1 = new Label();
             txtUsername = new TextBox();
+            label2 = new Label();
             txtPassword = new TextBox();
             btnLogin = new Button();
-            label1 = new Label();
-            label2 = new Label();
-            panel1 = new Panel();
+            panel1.SuspendLayout();
             SuspendLayout();
             // 
-            // txtUsername
+            // panel1
             // 
-            txtUsername.Font = new Font("Segoe UI", 24F, FontStyle.Regular, GraphicsUnit.Point, 238);
-            txtUsername.Location = new Point(405, 92);
-            txtUsername.Name = "txtUsername";
-            txtUsername.Size = new Size(266, 61);
-            txtUsername.TabIndex = 0;
+            panel1.BackColor = Color.FromArgb(41, 128, 185);
+            panel1.Controls.Add(lblTitle);
+            panel1.Dock = DockStyle.Fill;
+            panel1.Location = new Point(0, 0);
+            panel1.Name = "panel1";
+            panel1.Size = new Size(1024, 768);
+            panel1.TabIndex = 5;
             // 
-            // txtPassword
+            // lblTitle
             // 
-            txtPassword.Font = new Font("Segoe UI", 24F, FontStyle.Regular, GraphicsUnit.Point, 238);
-            txtPassword.Location = new Point(405, 178);
-            txtPassword.Name = "txtPassword";
-            txtPassword.Size = new Size(266, 61);
-            txtPassword.TabIndex = 1;
+            lblTitle.BackColor = Color.FromArgb(41, 128, 185);
+            lblTitle.Font = new Font("Segoe UI", 48F, FontStyle.Bold, GraphicsUnit.Point, 238);
+            lblTitle.ForeColor = Color.White;
+            lblTitle.Location = new Point(62, 74);
+            lblTitle.Name = "lblTitle";
+            lblTitle.Size = new Size(908, 126);
+            lblTitle.TabIndex = 0;
+            lblTitle.Text = "Project Task Manager";
+            lblTitle.TextAlign = ContentAlignment.MiddleCenter;
             // 
-            // btnLogin
+            // lblSubtitle
             // 
-            btnLogin.Font = new Font("Segoe UI", 24F, FontStyle.Regular, GraphicsUnit.Point, 238);
-            btnLogin.Location = new Point(514, 260);
-            btnLogin.Name = "btnLogin";
-            btnLogin.Size = new Size(157, 64);
-            btnLogin.TabIndex = 2;
-            btnLogin.Text = "Login";
-            btnLogin.UseVisualStyleBackColor = true;
-            btnLogin.Click += btnLogin_Click;
+            lblSubtitle.BackColor = Color.FromArgb(41, 128, 185);
+            lblSubtitle.Font = new Font("Segoe UI", 16F, FontStyle.Regular, GraphicsUnit.Point, 238);
+            lblSubtitle.ForeColor = Color.FromArgb(200, 220, 240);
+            lblSubtitle.Location = new Point(200, 200);
+            lblSubtitle.Name = "lblSubtitle";
+            lblSubtitle.Size = new Size(624, 50);
+            lblSubtitle.TabIndex = 1;
+            lblSubtitle.Text = "Organize your work efficiently";
+            lblSubtitle.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // label1
             // 
             label1.AutoSize = true;
-            label1.BackColor = SystemColors.ActiveCaption;
-            label1.Font = new Font("Segoe UI", 24F, FontStyle.Regular, GraphicsUnit.Point, 238);
-            label1.Location = new Point(190, 92);
+            label1.BackColor = Color.FromArgb(41, 128, 185);
+            label1.Font = new Font("Segoe UI", 14F, FontStyle.Regular, GraphicsUnit.Point, 238);
+            label1.ForeColor = Color.White;
+            label1.Location = new Point(250, 310);
             label1.Name = "label1";
-            label1.Size = new Size(200, 54);
-            label1.TabIndex = 3;
-            label1.Text = "Username";
+            label1.Size = new Size(126, 32);
+            label1.TabIndex = 2;
+            label1.Text = "Username:";
+            // 
+            // txtUsername
+            // 
+            txtUsername.BackColor = Color.FromArgb(52, 152, 219);
+            txtUsername.BorderStyle = BorderStyle.FixedSingle;
+            txtUsername.Font = new Font("Segoe UI", 14F, FontStyle.Regular, GraphicsUnit.Point, 238);
+            txtUsername.ForeColor = Color.White;
+            txtUsername.Location = new Point(250, 350);
+            txtUsername.Name = "txtUsername";
+            txtUsername.PlaceholderText = "Enter your username";
+            txtUsername.Size = new Size(524, 39);
+            txtUsername.TabIndex = 3;
             // 
             // label2
             // 
             label2.AutoSize = true;
-            label2.BackColor = SystemColors.ActiveCaption;
-            label2.Font = new Font("Segoe UI", 24F, FontStyle.Regular, GraphicsUnit.Point, 238);
-            label2.Location = new Point(202, 181);
+            label2.BackColor = Color.FromArgb(41, 128, 185);
+            label2.Font = new Font("Segoe UI", 14F, FontStyle.Regular, GraphicsUnit.Point, 238);
+            label2.ForeColor = Color.White;
+            label2.Location = new Point(250, 420);
             label2.Name = "label2";
-            label2.Size = new Size(188, 54);
+            label2.Size = new Size(116, 32);
             label2.TabIndex = 4;
-            label2.Text = "Password";
+            label2.Text = "Password:";
             // 
-            // panel1
+            // txtPassword
             // 
-            panel1.BackColor = SystemColors.ActiveCaption;
-            panel1.Location = new Point(160, 0);
-            panel1.Name = "panel1";
-            panel1.Size = new Size(540, 768);
-            panel1.TabIndex = 5;
+            txtPassword.BackColor = Color.FromArgb(52, 152, 219);
+            txtPassword.BorderStyle = BorderStyle.FixedSingle;
+            txtPassword.Font = new Font("Segoe UI", 14F, FontStyle.Regular, GraphicsUnit.Point, 238);
+            txtPassword.ForeColor = Color.White;
+            txtPassword.Location = new Point(250, 460);
+            txtPassword.Name = "txtPassword";
+            txtPassword.PlaceholderText = "Enter your password";
+            txtPassword.Size = new Size(524, 39);
+            txtPassword.TabIndex = 5;
+            txtPassword.UseSystemPasswordChar = true;
+            // 
+            // btnLogin
+            // 
+            btnLogin.BackColor = Color.FromArgb(46, 204, 113);
+            btnLogin.FlatAppearance.BorderSize = 0;
+            btnLogin.FlatStyle = FlatStyle.Flat;
+            btnLogin.Font = new Font("Segoe UI", 16F, FontStyle.Bold, GraphicsUnit.Point, 238);
+            btnLogin.ForeColor = Color.White;
+            btnLogin.Location = new Point(350, 560);
+            btnLogin.Name = "btnLogin";
+            btnLogin.Size = new Size(324, 60);
+            btnLogin.TabIndex = 6;
+            btnLogin.Text = "Login";
+            btnLogin.UseVisualStyleBackColor = false;
+            btnLogin.Click += btnLogin_Click;
             // 
             // LoginUC
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            Controls.Add(label2);
-            Controls.Add(label1);
+            BackColor = Color.FromArgb(41, 128, 185);
             Controls.Add(btnLogin);
             Controls.Add(txtPassword);
+            Controls.Add(label2);
             Controls.Add(txtUsername);
+            Controls.Add(label1);
+            Controls.Add(lblSubtitle);
             Controls.Add(panel1);
             Name = "LoginUC";
             Size = new Size(1024, 768);
+            panel1.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
         }
 
         #endregion
 
+        private Panel panel1;
+        private Label lblTitle;
+        private Label lblSubtitle;
+        private Label label1;
         private TextBox txtUsername;
+        private Label label2;
         private TextBox txtPassword;
         private Button btnLogin;
-        private Label label1;
-        private Label label2;
-        private Panel panel1;
     }
 }

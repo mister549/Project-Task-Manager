@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -13,16 +13,18 @@ namespace Task_manager
     {
         public TaskCard()
         {
-            InitializeComponent(); // БЕЗ ЭТОГО flpProjects ВСЕГДА БУДЕТ NULL
+            InitializeComponent();
             this.Paint += TaskCard_Paint;
         }
         public void SetTaskData(TaskItem task)
         {
-            // lblTaskTitle — это Label на твоей форме TaskCard
             lblTaskTitle.Text = task.Title;
 
-            // Если у тебя есть чекбокс для статуса:
-            // cbIsCompleted.Checked = task.IsCompleted;
+            string statusText = task.IsCompleted ? "COMPLETED" : "IN PROGRESS";
+            Color statusColor = task.IsCompleted ? Color.Green : Color.OrangeRed;
+
+            lblTaskStatus.Text = statusText;
+            lblTaskStatus.ForeColor = statusColor;
         }
         private void TaskCard_Paint(object sender, PaintEventArgs e)
         {

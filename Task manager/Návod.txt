@@ -1,0 +1,625 @@
+================================================================================
+TECHNICAL DOCUMENTATION
+TASK MANAGER APPLICATION (v1.0)
+================================================================================
+
+AUTHOR: Yaroslav Myronenko
+SUBJECT: Komponentova tvorba SW (Component Software Development) - EIE60E
+DATE CREATED: 2024
+LANGUAGE: C# 14.0
+TARGET PLATFORM: .NET 10 (Windows Forms)
+STATUS: In Development
+
+================================================================================
+1. PROJECT OVERVIEW
+================================================================================
+
+Task Manager je Windows Forms aplikace pro spravu projektu a ukolu.
+
+Hlavni funkce:
+- Overeni uzivatelu (prihlaseni)
+- Sprava projektu a ukolu
+- Prirazeni ukolu uzivatelum
+- Sledovani splneni ukolu a podukolu
+- Rozdeleni pristupu podle roli (Administrator, Developer)
+
+Aplikace slouzi k organizaci a sledovani pracovnich ukolu v ramci projektu.
+Kazdy uzivatel ma pristup pouze k jeho jim prirazenym ukolum a jejich 
+podrobnostem.
+
+================================================================================
+2. PROJECT STRUCTURE
+================================================================================
+
+2.1 HLAVNI CASTI PROJEKTU (Main Components):
+
+ROOT DIRECTORY: C:\Users\miste\source\repos\Task manager\Task manager\
+
+Projektova struktura:
+|
++-- Models/
+|   +-- User.cs                    # Model uzivatele
+|   +-- Project.cs                 # Model projektu
+|   +-- TaskItem.cs                # Model ukolu
+|   +-- SubTask.cs                 # Model podukolu
+|   +-- UserTask.cs                # Model prirazeni ukolu uzivatelum
+|
++-- Forms/
+|   +-- MainForm.cs                # Hlavni okno aplikace
+|   +-- MainForm.Designer.cs       # Designer pro MainForm
+|   +-- MainMenuControl.cs         # Hlavni nabidka
+|   +-- LoginUC.cs                 # Okno prihlaseni
+|   +-- CreateGlobalUC.cs          # Vytvareni projektu a ukolu
+|   +-- ProjectsMenu.cs            # Sprava projektu
+|   +-- ProjectTasksUC.cs          # Seznam ukolu projektu
+|   +-- TaskDetailsUC.cs           # Podrobnosti ukolu
+|   +-- TaskStepsUC.cs             # Podukoly ukolu
+|   +-- MyTask.cs                  # Osobni ukoly uzivatele
+|
++-- Controllers/
+|   +-- DataManager.cs             # Spravce dat (JSON) - SINGLETON
+|
++-- Data Files/ (vytvoreno za behu):
+|   +-- users.json                 # Databaze uzivatelu
+|   +-- projects.json              # Databaze projektu
+|   +-- tasks.json                 # Databaze ukolu
+|   +-- subtasks.json              # Databaze podukolu
+|   +-- usertasks.json             # Databaze prirazeni ukolu
+|
++-- Program.cs                      # Vstupni bod aplikace
+
+
+2.2 DOPLNKOVE CASTI (Additional Components):
+
+Vizualni prvky:
+- ProjectCard.cs          # Vizualni karta projektu
+- TaskCard.cs             # Vizualni karta ukolu
+- Custom Controls         # Vlastni ovladaci prvky
+
+Konfiguraci:
+- app.config              # Konfiguracni soubor (opcionalne)
+
+
+================================================================================
+3. DATA MODELS
+================================================================================
+
+3.1 USER MODEL
+-----------
+Vlastnosti:
+  Id: int                 # Jedinecny identifikator
+  Username: string        # Jmeno uzivatele (login)
+  Password: string        # Heslo (ulozeno v otevreme tvaru - bezpecnostni riziko)
+  Role: string            # Role: "Administrator" nebo "Developer"
+
+Ukladani: users.json
+
+Priklad JSON:
+{
+  "id": 1,
+  "username": "admin",
+  "password": "admin123",
+  "role": "Administrator"
+}
+
+
+3.2 PROJECT MODEL
+-----------
+Vlastnosti:
+  Id: int                 # Jedinecny identifikator
+  Name: string            # Nazev projektu
+
+Ukladani: projects.json
+
+Priklad JSON:
+{
+  "id": 1,
+  "name": "Web Application Project"
+}
+
+
+3.3 TASKITEM MODEL
+-----------
+Vlastnosti:
+  Id: int                 # Jedinecny identifikator
+  ProjectId: int          # ID projektu, ke kteremu patri
+  Title: string           # Nazev ukolu
+  Description: string     # Popis ukolu
+  IsCompleted: bool       # Stav dokonceni
+
+Ukladani: tasks.json
+
+Priklad JSON:
+{
+  "id": 1,
+  "projectId": 1,
+  "title": "Create Main Page",
+  "description": "Build HTML/CSS for homepage",
+  "isCompleted": false
+}
+
+
+3.4 SUBTASK MODEL
+-----------
+Vlastnosti:
+  Id: int                 # Jedinecny identifikator
+  ParentTaskId: int       # ID nadrazeneho ukolu
+  Description: string     # Popis podukolu
+  IsDone: bool            # Stav dokonceni
+
+Ukladani: subtasks.json
+
+Priklad JSON:
+{
+  "id": 1,
+  "parentTaskId": 1,
+  "description": "Design mockup",
+  "isDone": false
+}
+
+
+3.5 USERTASK MODEL
+-----------
+Vlastnosti:
+  Id: int                 # Jedinecny identifikator
+  UserId: int             # ID uzivatele
+  TaskId: int             # ID ukolu
+
+Ukladani: usertasks.json
+
+Priklad JSON:
+{
+  "id": 1,
+  "userId": 2,
+  "taskId": 1
+}
+
+
+================================================================================
+4. MAIN COMPONENTS DESCRIPTION
+================================================================================
+
+4.1 DataManager - DATA MANAGER (SINGLETON PATTERN)
+-----------
+Staticka trida pro spravu vsech dat aplikace.
+
+Hlavn funkce pro spravu projektu:
+  GetAllProjects()                    # Ziskat vsechny projekty
+  SaveProject(string name)             # Ulozit novy projekt
+  GetProjectById(int projectId)        # Ziskat projekt podle ID
+
+Hlavn funkce pro spravu ukolu:
+  GetAllTasks()                        # Ziskat vsechny ukoly
+  SaveTask(int projectId, string title) # Vytvorit novy ukol
+  GetTasksByProjectId(int projectId)   # Ziskat ukoly projektu
+  IsTaskTitleExists(...)               # Overit jedincnost nazvu
+  DeleteTask(int taskId)               # Odstranit ukol
+  UpdateTask(TaskItem updatedTask)     # Aktualizovat ukol
+
+Hlavn funkce pro spravu podukolu:
+  GetAllSubTasks()                     # Ziskat vsechny podukoly
+  AddSubTask(int taskId, string desc)  # Pridat podukol
+  GetSubTasksByTaskId(int taskId)      # Ziskat podukoly ukolu
+  UpdateSubTaskStatus(...)             # Aktualizovat stav podukolu
+
+Hlavn funkce pro spravu prirazeni:
+  GetAllUserTasks()                    # Ziskat vsechna prirazeni
+  AssignTaskToUser(int userId, int taskId)  # Prirazit ukol uzivateli
+  UnassignTaskFromUser(int userId, int taskId) # Zrusit prirazeni
+  GetUserTaskIds(int userId)           # Ziskat ukoly uzivatele
+  IsTaskAssignedToUser(...)            # Overit prirazeni
+
+
+4.2 LoginUC - LOGIN CONTROL
+-----------
+UserControl pro prihlaseni uzivatele.
+
+Hlavn metoda:
+  LoginUC_Load()                       # Inicializace pri nacitani
+  btnLogin_Click()                     # Zpracovani prihlaseni
+
+Hlavn event:
+  LoginSuccessful                      # Event pri uspesnem prihlaseni
+  
+Overovani:
+  Kontrola pristupu do users.json
+  Oveeni spravnosti jmena a hesla
+  Nacteni role uzivatele
+
+
+4.3 MainMenuControl - MAIN MENU
+-----------
+UserControl pro hlavni nabidku aplikace.
+
+Tlacitka:
+  btnCreateGlobal_Click()              # Vytvareni (jen administrator)
+  btnProjects_Click()                  # Zobrazeni projektu
+  btnMyTask_Click()                    # Zobrazeni osobnich ukolu
+  btnLogout_Click()                    # Odhlaseni
+
+Vykona se zde:
+  Nastaveni viditelnosti prvku podle role
+  Spravovani navigace mezi formulari
+  Prenos informaci o prihlasenem uzivateli
+
+
+4.4 CreateGlobalUC - CREATE PROJECT AND TASK
+-----------
+UserControl pro vytvareni projektu a ukolu (pouze pro administrátory).
+
+Hlavn metody:
+  LoadProjectsToSelector()             # Nacitani projektu do seznamu
+  LoadTasksForSelectedProject()        # Nacitani ukolu vybraneho projektu
+  btnCreateProject_Click()             # Vytvoreni noveho projektu
+  btnCreateTask_Click()                # Vytvoreni noveho ukolu
+  BtnAddStepToList_Click()             # Pridani podukolu (kroku)
+
+Validace:
+  Kontrola, zda jsou pole vyplnena
+  Overeni jedincosti nazvu projektu
+  Overeni jedincosti nazvu ukolu v projektu
+  Kontrola vyberu projektu pred vytvorenim ukolu
+
+
+4.5 ProjectsMenu (ProjectListControl) - PROJECT LIST
+-----------
+UserControl pro zobrazeni seznamu projektu.
+
+Hlavn metody:
+  LoadProjects()                       # Nacitani vsech projektu
+  ShowProjectTasks()                   # Zobrazeni ukolu projektu
+  ShowTaskDetails()                    # Zobrazeni podrobnosti ukolu
+
+Interakce:
+  Zobrazeni jako seznam nebo karty
+  Vyber projektu a zobrazeni jeho ukolu
+  Navigace na podrobnosti ukolu
+
+
+4.6 ProjectTasksUC - PROJECT TASKS LIST
+-----------
+UserControl pro zobrazeni ukolu vybraneho projektu.
+
+Hlavn metoda:
+  LoadProjectTasks()                   # Nacitani ukolu projektu
+
+Udalosti:
+  OnBack                               # Udalost navratu do menu
+  OnTaskSelected                       # Udalost vyberu ukolu
+  
+Funkcionalita:
+  Zobrazeni vsech ukolu projektu
+  Moznost vyberu ukolu pro zobrazeni podrobnosti
+  Tlacitko pro navrat zpet
+
+
+4.7 TaskDetailsUC - TASK DETAILS
+-----------
+UserControl pro zobrazeni podrobnosti ukolu.
+
+Hlavn metody:
+  LoadTaskDetails()                    # Nacitani podrobnosti ukolu
+  UpdateAssignmentButtons()            # Aktualizovani tlacitekprirazeni
+  btnSaveDesc_Click()                  # Ulozeni popisu
+  btnAssignToMe_Click()                # Prirazeni si ukolu
+  btnLeave_Click()                     # Opusteni ukolu
+  btnBack_Click()                      # Navrat na seznam ukolu
+
+Funkcionalita:
+  Zobrazeni nazvu, popisu a stavu
+  Zobrazeni seznamu podukolu
+  Moznost prirazeni/opusteni ukolu
+  Moznost upravy popisu
+  Kontrola stavu prirazeni (vlastneni)
+
+
+4.8 TaskStepsUC - TASK SUBTASKS
+-----------
+UserControl pro zobrazeni a spravovani podukolu (kroku) ukolu.
+
+Hlavn metoda:
+  LoadTaskSteps()                      # Nacitani podukolu
+
+Funkcionalita:
+  Zobrazeni podukolu jako CheckBox
+  Moznost oznaceni podukolu jako hotoveho
+  Kontrola stavu vsech podukolu
+  Automaticke oznaceni hlavniho ukolu jako hotoveho
+
+
+4.9 MyTask - MY TASKS
+-----------
+UserControl pro zobrazeni osobnich (prirazenych) ukolu uzivatele.
+
+Hlavn metody:
+  LoadMyTasks()                        # Nacitani osobnich ukolu
+  ShowTaskDetails()                    # Zobrazeni podrobnosti
+
+Funkcionalita:
+  Nacteni vsech ukolu prirazenych prihlaseneho uzivatele
+  Zobrazeni jako seznam nebo karty
+  Navigace na podrobnosti ukolu
+
+
+4.10 MainForm - MAIN WINDOW
+-----------
+Hlavni okno aplikace, obsahuje orchestraci mezi formulari.
+
+Hlavn metody:
+  ShowLogin()                          # Zobrazeni prihlasovaci obrazovky
+  OpenUserWindow(User user)            # Otevreni hlavniho okna pro uzivatele
+  OpenControl(UserControl control)     # Oteveni konkretniho controls
+
+Funkcionalita:
+  Orientacni bod pro cely aplikaci
+  Spravovani zmeny mezi formulari
+  Uchovavani informace o prihlasenem uzivateli
+
+
+================================================================================
+5. APPLICATION FLOW (TYP AKCÍ)
+================================================================================
+
+5.1 PRIHLASENI
+---
+1. Uživatel spustí aplikaci
+2. MainForm zobrazí LoginUC
+3. Uživatel zadá username a password
+4. LoginUC zvaliduje pøihlašovací údaje
+5. DataManager zkontroluje users.json
+6. Pokud jsou údaje správné:
+   - Naplní se objektem User s ID, username, role
+   - Event LoginSuccessful se vyvolá
+7. MainForm otevøe MainMenuControl
+8. MainMenuControl se inicializuje na základì role uživatele
+
+
+5.2 VYTVARENI PROJEKTU (ADMINISTRATORONLY)
+---
+1. Administrátor klikne na "Vytvoøit"
+2. MainForm otevøe CreateGlobalUC
+3. CreateGlobalUC naète seznam projektù
+4. Administrátor zadá název projektu
+5. Klikne na "Vytvoøit Projekt"
+6. DataManager:
+   - Zkontroluje, zda projekt s tímto názvem neexistuje
+   - Vygeneruje nové ID
+   - Uloží do projects.json
+7. UI se aktualizuje se novým projektem
+
+
+5.3 VYTVARENI UKOLU
+---
+1. Administrátor vybere projekt
+2. Zadá název úkolu
+3. Klikne na "Vytvoøit Úkol"
+4. DataManager:
+   - Zkontroluje, zda úkol s tímto názvem v projektu neexistuje
+   - Vygeneruje nové ID
+   - Vytvoøí TaskItem (IsCompleted = false)
+   - Automaticky vytvoøí první SubTask ("auto step")
+5. Uloží do tasks.json a subtasks.json
+6. Administrátor vidí nový úkol v seznamu
+
+
+5.4 PRIDANI PODUKOLU
+---
+1. Administrátor vybere úkol
+2. Zadá popis podúkolu
+3. Klikne na "Pøidat Krok"
+4. DataManager:
+   - Vygeneruje nové ID
+   - Vytvoøí SubTask s ParentTaskId = vybraný úkol
+   - Uloží do subtasks.json
+5. Podúkol se pøidá do seznamu
+
+
+5.5 PRIRAZENI UKOLU SOBE
+---
+1. Vývojáø si prohlíží projekty
+2. Vybere projekt
+3. Vybere úkol
+4. Klikne na "Pøiøadit si"
+5. DataManager:
+   - Zkontroluje, zda úkol není již pøiøazen
+   - Vytvoøí UserTask záznam (UserId=vývojáø, TaskId=úkol)
+   - Uloží do usertasks.json
+6. UI se aktualizuje:
+   - Tlaèítko "Pøiøadit si" se deaktivuje
+   - Tlaèítko "Opustit" se aktivuje
+7. Úkol se pøidá do "Moje Úkoly"
+
+
+5.6 PLNENI PODUKOLU
+---
+1. Vývojáø si vezme úkol (prirazen)
+2. Zobrazí si úkol v "Moje Úkoly" nebo z projektu
+3. Vidí seznam podúkolù
+4. Oznaèí podúkol jako hotový (CheckBox)
+5. DataManager:
+   - Aktualizuje SubTask.IsDone = true
+   - Zkontroluje, zda jsou všechny podúkoly hotovy
+   - Pokud ANO: oznaèí TaskItem.IsCompleted = true
+6. UI se aktualizuje s vizuálním stavem
+
+
+5.7 OPUSTENI UKOLU
+---
+1. Vývojáø vidí pøiøazený úkol
+2. Klikne na "Opustit"
+3. DataManager:
+   - Smaže UserTask záznam
+   - Uloží zmìnu do usertasks.json
+4. UI se aktualizuje:
+   - Tlaèítko "Pøiøadit si" se aktivuje
+   - Tlaèítko "Opustit" se deaktivuje
+5. Úkol zmizí z "Moje Úkoly"
+
+
+5.8 UPRAVY POPISU UKOLU
+---
+1. Vývojáø si vezme úkol (prirazen)
+2. Zobrazí si podrobnosti úkolu
+3. Klikne do pole popisu
+4. Upraví text
+5. Klikne "Uložit"
+6. DataManager:
+   - Aktualizuje TaskItem.Description
+   - Uloží zmìnu do tasks.json
+7. Zobrazí potvrzovací zprávu
+
+
+================================================================================
+6. DATA PERSISTENCE
+================================================================================
+
+Vše data jsou uložena v JSON formátu v bìžném adresáøi aplikace.
+
+Cestu k datovým souborùm lze zmìnit v DataManager.cs:
+
+Soubory:
+  users.json        - Uživatelé a jejich role
+  projects.json     - Projekty
+  tasks.json        - Úkoly
+  subtasks.json     - Podúkoly
+  usertasks.json    - Pøiøazení úkolù
+
+Inicializace:
+  Pøi prvním spuštìní aplikace se soubory vytvoøí automaticky
+  nebo se naplní výchozími daty
+
+
+================================================================================
+7. SECURITY AND VALIDATION
+================================================================================
+
+7.1 OVÌØENÍ (Authentication):
+  - Kontrola uživatelského jména a hesla v users.json
+  - Heslo se uchovává v otevøeném tvaru - BEZPEÈNOSTNÍ RIZIKO!
+  - Doporuèuje se šifrování hesla (bcrypt, PBKDF2)
+
+
+7.2 AUTORIZACE (Authorization):
+  - Kontrola role uživatele
+  - Administrátor má pøístup k vytváøení projektù a úkolù
+  - Vývojáø má pøístup pouze k prohlížení a plnìní úkolù
+  - Zobrazení/skrytí prvkù podle role
+
+
+7.3 VALIDACE (Validation):
+  - Prázdná pole se kontrolují
+  - Jednoznaènost názvù projektù a úkolù
+  - Overení existence vybraných prvkù
+  - Maximální délka textu u popisu
+
+
+7.4 DOPORUÈENÁ VYLEPŠENÍ:
+  - Šifrování hesel (bcrypt)
+  - Migracja na databázi (SQL Server, PostgreSQL)
+  - Pøidání protokolování akcí
+  - Ochrana proti SQL injekcím
+  - Pøidání 2FA (dvoustupòové ovìøování)
+  - Backup a recovery systém
+
+
+================================================================================
+8. KNOWN LIMITATIONS AND ISSUES
+================================================================================
+
+8.1 SOUÈASNÁ OMEZENÍ:
+  - Hesla nejsou šifrována
+  - Žádné šifrování dat
+  - JSON není škálovatelný pro velké objemy
+  - Žádné protokolování akcí
+  - Žádná historie verzí
+  - Žádná synchronizace v reálném èase
+
+
+8.2 POTENCIÁLNÍ PROBLÉMY:
+  - Soubìžné zmìny JSON souborù mohou vést ke ztrátì dat
+  - Žádný mechanismus zámku (lock) pøi úpravách
+  - Velký poèet operací I/O na disk
+  - Slabá výkonnost pøi velkém množství dat
+
+
+8.3 BUDOUCÍ ZLEPŠENÍ:
+  - Migrace na databázi
+  - Implementace caching
+  - Pøidání vyhledávání a filtrování
+  - Pøidání statistik a reportù
+  - Multi-user synchronizace
+  - API pro mobilní aplikace
+
+
+================================================================================
+9. DEPLOYMENT AND INSTALLATION
+================================================================================
+
+9.1 POŽADAVKY:
+  - .NET 10 SDK
+  - Windows 10/11 (pro Windows Forms)
+  - Visual Studio 2022 nebo novìjší
+
+
+9.2 INSTALACE:
+  1. Klonovat repozitáø: git clone <url>
+  2. Otevøít v Visual Studio
+  3. Obnovit balíèky: dotnet restore
+  4. Sestravit: dotnet build
+  5. Spustit: dotnet run
+
+
+9.3 POÈÁTEÈNÍ DATA:
+  Pøi prvním spuštìní:
+  1. Aplikace vytvoøí soubor users.json
+  2. Pøidá výchozího administrátora (admin/admin123)
+  3. Pøidá výchozího vývojáøe (dev/dev123)
+
+
+9.4 KONFIGURACE:
+  Cesty k datovým souborùm jsou v DataManager.cs
+  Lze zmìnit promìnné:
+  - projectsFile
+  - tasksFile
+  - subTasksFile
+  - userTasksFile
+  - usersFile
+
+
+================================================================================
+10. TESTING SCENARIOS
+================================================================================
+
+10.1 PØIHLÁŠENÍ:
+  [TEST] Pøihlášení se správnými povìøeními
+  [TEST] Pokus o pøihlášení se špatným heslem
+  [TEST] Pokus o pøihlášení s neexistujícím uživatelem
+  [TEST] Pokus o pøihlášení s prázdnými poli
+
+
+10.2 SPRÁVA PROJEKTÙ (ADMINISTRÁTOR):
+  [TEST] Vytváøení nového projektu
+  [TEST] Pokus o vytváøení s duplikujícím se názvem
+  [TEST] Pokus o vytváøení bez názvu
+  [TEST] Zobrazení seznamu projektù
+
+
+10.3 SPRÁVA ÚKOLÙ (ADMINISTRÁTOR):
+  [TEST] Vytváøení úkolu v projektu
+  [TEST] Vytváøení bez názvu
+  [TEST] Pokus o duplikující se jméno v projektu
+  [TEST] Pøidávání podúkolù
+
+
+10.4 PRÁCE S ÚKOLY (VÝVOJÁØ):
+  [TEST] Zobrazení dostupných projektù
+  [TEST] Zobrazení úkolù v projektu
+  [TEST] Pøiøazení úkolu sobì
+  [TEST] Odmítnutí úkolu (opuštìní)
+  [TEST] Úprava popisu úkolu
+  [TEST] Plnìní podúkolù
+  [TEST] Zobrazení osobních úkolù
+  [TEST] Automatické oznaèení úkolu jako hotového
+
+
+================================================================================
