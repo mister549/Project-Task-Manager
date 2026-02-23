@@ -6,20 +6,23 @@ namespace Task_manager
 {
     public partial class MainForm : Form
     {
+        // Konstruktor hlavního formuláře, který inicializuje komponentu a zobrazuje přihlašovací obrazovku.
         public MainForm()
         {
             InitializeComponent();
             ShowLogin();       
         }
-        // 1. Метод, который очищает экран и ставит меню
+
+        // Vytváří a zobrazuje přihlašovací formulář v centru okna pomocí TableLayoutPanel.
+        // Po úspěšném přihlášení uživatele se spustí metod OpenUserWindow().
         private void ShowLogin()
         {
             this.Controls.Clear();
 
-            // Сетка 3х3
+     
             TableLayoutPanel table = new TableLayoutPanel { Dock = DockStyle.Fill, ColumnCount = 3, RowCount = 3 };
 
-            // Настройка растяжения сторон (делаем центр)
+    
             table.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50f));
             table.ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
             table.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50f));
@@ -31,18 +34,20 @@ namespace Task_manager
             LoginUC login = new LoginUC();
             login.LoginSuccessful += (user) => OpenUserWindow(user);
 
-            table.Controls.Add(login, 1, 1); // Кладем в центр (1,1)
+            table.Controls.Add(login, 1, 1); 
             this.Controls.Add(table);
         }
+
+        // Odstraní přihlašovací formulář a zobrazí hlavní nabídku aplikace s údaji přihlášeného uživatele.
         private void OpenUserWindow(User user)
         {
-            this.Controls.Clear(); // Удаляем LoginUC
+            this.Controls.Clear(); 
 
-            // 2. Создаем Главное Меню и передаем в него юзера
+            
             MainMenuControl menu = new MainMenuControl(user);
             menu.Dock = DockStyle.Fill;
 
-            this.Controls.Add(menu); // Показываем на экране
+            this.Controls.Add(menu); 
         }
     }
 }

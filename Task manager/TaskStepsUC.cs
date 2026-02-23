@@ -13,11 +13,15 @@ namespace Task_manager
     {
         public event Action OnStepsUpdated;
 
+        // Konstruktor komponenty, který inicializuje ovládací prvky.
         public TaskStepsUC()
         {
             InitializeComponent();
         }
 
+        // Naèítá seznam všech podúkolù (krokù) pro zadaný úkol a vytváøí pro nì zaškrtávací pole.
+        // Pokud úkol neobsahuje žádné podúkoly, zobrazí odpovídající zprávu.
+        // Každé zaškrtávací pole má posluchaè, který aktualizuje stav podúkolu v úložišti dat.
         public void LoadTaskSteps(TaskItem task)
         {
             flpSteps.Controls.Clear();
@@ -38,6 +42,7 @@ namespace Task_manager
             }
             else
             {
+                // Vytváøí zaškrtávací pole pro každý podúkol a nastavuje jejich stav.
                 foreach (var sub in subTasks)
                 {
                     CheckBox cb = new CheckBox

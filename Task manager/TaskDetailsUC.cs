@@ -17,11 +17,14 @@ namespace Task_manager
         public event Action OnBack;
         public event Action OnTaskUpdated;
 
+        // Konstruktor komponenty, který inicializuje ovládací prvky.
         public TaskDetailsUC()
         {
             InitializeComponent();
         }
 
+        // Naèítá detailní informace o úkolu vèetnì názvu, popisu a podúkolù.
+        // Nastavuje stavy tlaèítek na základì toho, zda je úkol pøiøazen aktuálnímu uživateli.
         public void LoadTaskDetails(TaskItem task, User user)
         {
             _currentTask = task;
@@ -41,6 +44,8 @@ namespace Task_manager
             UpdateAssignmentButtons();
         }
 
+        // Aktualizuje stavy tlaèítek "Pøiøadit mì" a "Opustit" na základì toho,
+        // zda je úkol pøiøazen aktuálnímu uživateli.
         private void UpdateAssignmentButtons()
         {
             if (_currentUser == null || _currentTask == null) return;
@@ -52,6 +57,8 @@ namespace Task_manager
             contentPanel.Enabled = isAssigned;
         }
 
+        // Ukládá aktualizovaný popis úkolu do úložištì dat.
+        // Vyvolá událost OnTaskUpdated po úspìšném uložení.
         private void btnSaveDesc_Click(object sender, EventArgs e)
         {
             if (_currentTask != null)
@@ -63,6 +70,8 @@ namespace Task_manager
             }
         }
 
+        // Pøiøadí aktuální úkol pøihlášenému uživateli.
+        // Aktualizuje stavy tlaèítek a vyvolá událost OnTaskUpdated.
         private void btnAssignToMe_Click(object sender, EventArgs e)
         {
             if (_currentUser != null && _currentTask != null)
@@ -74,6 +83,8 @@ namespace Task_manager
             }
         }
 
+        // Odstraní pøiøazení aktuálního úkolu od pøihlášeného uživatele.
+        // Aktualizuje stavy tlaèítek a vyvolá událost OnTaskUpdated.
         private void btnLeave_Click(object sender, EventArgs e)
         {
             if (_currentUser != null && _currentTask != null)
@@ -85,6 +96,8 @@ namespace Task_manager
             }
         }
 
+        // Obslužný program pro kliknutí na tlaèítko "Zpìt".
+        // Vyvolá gebeurtenost OnBack pro návrat na pøedchozí obrazovku.
         private void btnBack_Click(object sender, EventArgs e)
         {
             OnBack?.Invoke();

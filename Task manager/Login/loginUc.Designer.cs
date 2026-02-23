@@ -36,11 +36,13 @@
             label2 = new Label();
             txtPassword = new TextBox();
             btnLogin = new Button();
+            panel1.SuspendLayout();
             SuspendLayout();
             // 
             // panel1
             // 
             panel1.BackColor = Color.FromArgb(41, 128, 185);
+            panel1.Controls.Add(lblTitle);
             panel1.Dock = DockStyle.Fill;
             panel1.Location = new Point(0, 0);
             panel1.Name = "panel1";
@@ -49,20 +51,18 @@
             // 
             // lblTitle
             // 
-            lblTitle.AutoSize = false;
             lblTitle.BackColor = Color.FromArgb(41, 128, 185);
             lblTitle.Font = new Font("Segoe UI", 48F, FontStyle.Bold, GraphicsUnit.Point, 238);
             lblTitle.ForeColor = Color.White;
-            lblTitle.Location = new Point(200, 100);
+            lblTitle.Location = new Point(62, 74);
             lblTitle.Name = "lblTitle";
-            lblTitle.Size = new Size(624, 100);
+            lblTitle.Size = new Size(908, 126);
             lblTitle.TabIndex = 0;
-            lblTitle.Text = "Task Manager";
+            lblTitle.Text = "Project Task Manager";
             lblTitle.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // lblSubtitle
             // 
-            lblSubtitle.AutoSize = false;
             lblSubtitle.BackColor = Color.FromArgb(41, 128, 185);
             lblSubtitle.Font = new Font("Segoe UI", 16F, FontStyle.Regular, GraphicsUnit.Point, 238);
             lblSubtitle.ForeColor = Color.FromArgb(200, 220, 240);
@@ -81,7 +81,7 @@
             label1.ForeColor = Color.White;
             label1.Location = new Point(250, 310);
             label1.Name = "label1";
-            label1.Size = new Size(129, 32);
+            label1.Size = new Size(126, 32);
             label1.TabIndex = 2;
             label1.Text = "Username:";
             // 
@@ -94,7 +94,7 @@
             txtUsername.Location = new Point(250, 350);
             txtUsername.Name = "txtUsername";
             txtUsername.PlaceholderText = "Enter your username";
-            txtUsername.Size = new Size(524, 36);
+            txtUsername.Size = new Size(524, 39);
             txtUsername.TabIndex = 3;
             // 
             // label2
@@ -105,7 +105,7 @@
             label2.ForeColor = Color.White;
             label2.Location = new Point(250, 420);
             label2.Name = "label2";
-            label2.Size = new Size(121, 32);
+            label2.Size = new Size(116, 32);
             label2.TabIndex = 4;
             label2.Text = "Password:";
             // 
@@ -118,7 +118,7 @@
             txtPassword.Location = new Point(250, 460);
             txtPassword.Name = "txtPassword";
             txtPassword.PlaceholderText = "Enter your password";
-            txtPassword.Size = new Size(524, 36);
+            txtPassword.Size = new Size(524, 39);
             txtPassword.TabIndex = 5;
             txtPassword.UseSystemPasswordChar = true;
             // 
@@ -148,10 +148,10 @@
             Controls.Add(txtUsername);
             Controls.Add(label1);
             Controls.Add(lblSubtitle);
-            Controls.Add(lblTitle);
             Controls.Add(panel1);
             Name = "LoginUC";
             Size = new Size(1024, 768);
+            panel1.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
         }

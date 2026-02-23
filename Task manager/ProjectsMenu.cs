@@ -15,22 +15,27 @@ namespace Task_manager
         private User _currentUser;
         private Panel _contentPanel;
 
+        // Konstruktor komponenty, který inicializuje ovládací prvky.
         public ProjectListControl()
         {
             InitializeComponent();
         }
 
+        // Konstruktor, který inicializuje komponentu a nastavuje aktuálního uživatele a obsah panelu.
         public ProjectListControl(User user, Panel contentPanel) : this()
         {
             _currentUser = user;
             _contentPanel = contentPanel;
         }
 
+        // Načítá seznam všech projektů a vytváří pro ně kartičky.
+        // Každá kartička má klikáním oznamovatel, který zobrazí úkoly příslušného projektu.
         public void LoadProjects()
         {
             flpProjects.Controls.Clear();
             var projects = DataManager.GetAllProjects();
 
+            // Vytváří karty projektů pro každý projekt a přidává je do panelu.
             foreach (var project in projects)
             {
                 ProjectCard projectCard = new ProjectCard();
@@ -46,6 +51,8 @@ namespace Task_manager
             }
         }
 
+        // Zobrazuje seznam úkolů pro vybraný projekt.
+        // Umožňuje uživateli vrátit se na seznam projektů nebo vybrat úkol pro zobrazení detailů.
         private void ShowProjectTasks(Project project)
         {
             _contentPanel.Controls.Clear();
@@ -65,6 +72,8 @@ namespace Task_manager
             _contentPanel.Controls.Add(projectTasksUC);
         }
 
+        // Zobrazuje detailní informace o vybraném úkolu.
+        // Umožňuje uživateli vrátit se na seznam úkolů projektu nebo aktualizovat úkol.
         private void ShowTaskDetails(TaskItem task, Project parentProject)
         {
             _contentPanel.Controls.Clear();

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;                // Для работы с файлами
+using System.IO;
 using System.Linq;
 using System.Text.Json;
-using Newtonsoft.Json;         // Для работы с JSON (нужно установить NuGet!)
+using Newtonsoft.Json;
 using Task_manager.Models;
 
 namespace Task_manager
@@ -17,8 +17,8 @@ namespace Task_manager
 
         private static JsonSerializerOptions _options = new JsonSerializerOptions { WriteIndented = true };
 
-        // --- РАБОТА С ПРОЕКТАМИ ---
-
+        // Načítá seznam všech projektů ze souboru projects.json.
+        // Pokud soubor neexistuje, vrátí prázdný seznam.
         public static List<Project> GetAllProjects()
         {
             if (!File.Exists(projectsFile)) return new List<Project>();
@@ -26,25 +26,27 @@ namespace Task_manager
             return System.Text.Json.JsonSerializer.Deserialize<List<Project>>(json) ?? new List<Project>();
         }
 
+        // Uloží nový projekt se zadaným názvem.
+        // Automaticky přiřadí nové ID na základě nejvyššího stávajícího ID.
         public static void SaveProject(string name)
         {
             var projects = GetAllProjects();
-
-            // Генерируем ID (Max + 1)
             int nextId = projects.Count > 0 ? projects.Max(p => p.Id) + 1 : 1;
-
             projects.Add(new Project { Id = nextId, Name = name });
             File.WriteAllText(projectsFile, System.Text.Json.JsonSerializer.Serialize(projects, _options));
         }
 
-        // --- РАБОТА С ЗАДАЧАМИ ---
-
+        // Načítá seznam všech úkolů ze souboru tasks.json.
+        // Pokud soubor neexistuje, vrátí prázdný seznam.
         public static List<TaskItem> GetAllTasks()
         {
             if (!File.Exists(tasksFile)) return new List<TaskItem>();
             string json = File.ReadAllText(tasksFile);
             return System.Text.Json.JsonSerializer.Deserialize<List<TaskItem>>(json) ?? new List<TaskItem>();
         }
+
+        // Vytváří nový úkol pro zadaný projekt.
+        // Přiřadí unikátní ID a automaticky vytváří první podúkol "auto step".
         public static void SaveTask(int projectId, string title)
         {
             var allTasks = GetAllTasks();
@@ -55,31 +57,37 @@ namespace Task_manager
                 Id = nextTaskId,
                 ProjectId = projectId,
                 Title = title,
-                IsCompleted = false // Изначально не выполнена
+                IsCompleted = false
             });
             File.WriteAllText(tasksFile, System.Text.Json.JsonSerializer.Serialize(allTasks, _options));
 
-            // АВТОМАТИЧЕСКИЙ ПЕРВЫЙ TO-DO
             AddSubTask(nextTaskId, "auto step");
         }
+
+        // Vrátí seznam všech úkolů, které patří k zadanému projektu.
         public static List<TaskItem> GetTasksByProjectId(int projectId)
         {
             return GetAllTasks().Where(t => t.ProjectId == projectId).ToList();
         }
+
+        // Kontroluje, zda úkol se zadaným názvem již existuje v daném projektu.
+        // Porovnání je citlivé na velikost písmen ignoruje.
         public static bool IsTaskTitleExists(int projectId, string title)
         {
             var allTasks = GetAllTasks();
-            // Ищем задачу, у которой совпадает и ID проекта, и название (без учета регистра)
             return allTasks.Any(t => t.ProjectId == projectId &&
                                      t.Title.Trim().Equals(title.Trim(), StringComparison.OrdinalIgnoreCase));
         }
-        // --- Удаление задачи ---
+
+        // Odstraní úkol se zadaným ID ze souboru tasks.json.
         public static void DeleteTask(int taskId)
         {
             var allTasks = GetAllTasks();
             allTasks.RemoveAll(t => t.Id == taskId);
             File.WriteAllText(tasksFile, System.Text.Json.JsonSerializer.Serialize(allTasks, _options));
         }
+
+        // Aktualizuje vlastnosti existujícího úkolu (název, popis, stav dokončení).
         public static void UpdateTask(TaskItem updatedTask)
         {
             var allTasks = GetAllTasks();
@@ -90,16 +98,21 @@ namespace Task_manager
                 task.Title = updatedTask.Title;
                 task.Description = updatedTask.Description;
                 task.IsCompleted = updatedTask.IsCompleted;
-                // Сохраняем обновленный список всех задач
                 File.WriteAllText(tasksFile, System.Text.Json.JsonSerializer.Serialize(allTasks, _options));
             }
         }
+
+        // Načítá seznam všech podúkolů ze souboru subtasks.json.
+        // Pokud soubor neexistuje, vrátí prázdný seznam.
         public static List<SubTask> GetAllSubTasks()
         {
             if (!File.Exists(subTasksFile)) return new List<SubTask>();
             string json = File.ReadAllText(subTasksFile);
             return System.Text.Json.JsonSerializer.Deserialize<List<SubTask>>(json) ?? new List<SubTask>();
         }
+
+        // Přidá nový podúkol k úkolu se zadaným ID.
+        // Automaticky přiřadí nové ID na základě nejvyššího stávajícího ID.
         public static void AddSubTask(int taskId, string description)
         {
             var allSubTasks = GetAllSubTasks();
@@ -114,6 +127,8 @@ namespace Task_manager
             });
             File.WriteAllText(subTasksFile, System.Text.Json.JsonSerializer.Serialize(allSubTasks, _options));
         }
+
+        // Aktualizuje stav dokončení podúkolu a kontroluje, zda je nadřazený úkol kompletně hotov.
         public static void UpdateSubTaskStatus(int subTaskId, bool isDone)
         {
             var allSubTasks = GetAllSubTasks();
@@ -123,10 +138,10 @@ namespace Task_manager
             sub.IsDone = isDone;
             File.WriteAllText(subTasksFile, System.Text.Json.JsonSerializer.Serialize(allSubTasks, _options));
 
-            // Проверяем все подзадачи этого родителя
             CheckAndUpdateTaskCompletion(sub.ParentTaskId);
         }
 
+        // Kontroluje, zda jsou všechny podúkoly hotovy, a pokud ano, označí nadřazený úkol jako dokončený.
         private static void CheckAndUpdateTaskCompletion(int taskId)
         {
             var allSubTasks = GetAllSubTasks().Where(s => s.ParentTaskId == taskId).ToList();
@@ -135,14 +150,13 @@ namespace Task_manager
 
             if (parentTask != null)
             {
-                // Задача выполнена, ТОЛЬКО если все подзадачи выполнены
                 parentTask.IsCompleted = allSubTasks.All(s => s.IsDone);
                 File.WriteAllText(tasksFile, System.Text.Json.JsonSerializer.Serialize(allTasks, _options));
             }
         }
 
-        // --- РАБОТА С UserTask ---
-
+        // Načítá seznam všech přiřazení úkolů uživatelům ze souboru usertasks.json.
+        // Pokud soubor neexistuje, vrátí prázdný seznam.
         public static List<UserTask> GetAllUserTasks()
         {
             if (!File.Exists(userTasksFile)) return new List<UserTask>();
@@ -150,14 +164,15 @@ namespace Task_manager
             return System.Text.Json.JsonSerializer.Deserialize<List<UserTask>>(json) ?? new List<UserTask>();
         }
 
+        // Přiřadí úkol uživateli.
+        // Pokud je úkol již přiřazen danému uživateli, nic se neudělá.
         public static void AssignTaskToUser(int userId, int taskId)
         {
             var userTasks = GetAllUserTasks();
 
-            // Проверяем, не назначена ли уже эта задача этому пользователю
             if (userTasks.Any(ut => ut.UserId == userId && ut.TaskId == taskId))
             {
-                return; // Уже назначена
+                return;
             }
 
             int nextId = userTasks.Count > 0 ? userTasks.Max(ut => ut.Id) + 1 : 1;
@@ -172,6 +187,7 @@ namespace Task_manager
             File.WriteAllText(userTasksFile, System.Text.Json.JsonSerializer.Serialize(userTasks, _options));
         }
 
+        // Odstraní přiřazení úkolu od uživatele.
         public static void UnassignTaskFromUser(int userId, int taskId)
         {
             var userTasks = GetAllUserTasks();
@@ -179,6 +195,7 @@ namespace Task_manager
             File.WriteAllText(userTasksFile, System.Text.Json.JsonSerializer.Serialize(userTasks, _options));
         }
 
+        // Vrátí seznam ID všech úkolů, které jsou přiřazeny danému uživateli.
         public static List<int> GetUserTaskIds(int userId)
         {
             return GetAllUserTasks()
@@ -187,6 +204,7 @@ namespace Task_manager
                 .ToList();
         }
 
+        // Kontroluje, zda je specifický úkol přiřazen danému uživateli.
         public static bool IsTaskAssignedToUser(int userId, int taskId)
         {
             return GetAllUserTasks().Any(ut => ut.UserId == userId && ut.TaskId == taskId);

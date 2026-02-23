@@ -17,11 +17,15 @@ namespace Task_manager
         public event Action OnBack;
         public event Action<TaskItem> OnTaskSelected;
 
+        // Konstruktor komponenty, kter� inicializuje ovl�dac� prvky.
         public ProjectTasksUC()
         {
             InitializeComponent();
         }
 
+        // Na��t� seznam v�ech �kol� pro zadan� projekt a zobrazuje je jako karty.
+        // Pokud projekt neobsahuje ��dn� �koly, zobraz� odpov�daj�c� zpr�vu.
+        // Ka�d� karti�ka �kolu m� klik�n�m oznamovatel, kter� vyvol� ud�lost OnTaskSelected.
         public void LoadProjectTasks(Project project, User user)
         {
             _currentProject = project;
@@ -45,6 +49,7 @@ namespace Task_manager
                 return;
             }
 
+            // Vytv��� karty �kol� pro ka�d� �kol v projektu a p�id�v� je do panelu.
             foreach (var task in projectTasks)
             {
                 TaskCard taskCard = new TaskCard();
@@ -57,6 +62,8 @@ namespace Task_manager
             }
         }
 
+        // Obslu�n� program pro kliknut� na tla��tko "Zp�t".
+        // Vyvol� ud�lost OnBack pro n�vrat na p�edchoz� obrazovku.
         private void btnBack_Click(object sender, EventArgs e)
         {
             OnBack?.Invoke();

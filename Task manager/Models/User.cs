@@ -10,7 +10,5 @@ namespace Task_manager.Models
         public string Username { get; set; }
         public string Password { get; set; }
         public string Role { get; set; }
-
-        // Конструктор для удобного создания нового пользователя
     }
 }

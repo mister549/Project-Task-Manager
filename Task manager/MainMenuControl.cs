@@ -13,6 +13,8 @@ namespace Task_manager
     {
         private User _currentUser;
 
+        // Konstruktor, který inicializuje komponentu a nastavuje údaje uživatele.
+        // Ověřuje roli uživatele a podle toho povoluje nebo zakazuje tlačítko "Vytvořit".
         public MainMenuControl(User user) : this()
         {
             _currentUser = user;
@@ -28,11 +30,16 @@ namespace Task_manager
             }
         }
 
+        // Výchozí konstruktor, který inicializuje komponenty formuláře.
         public MainMenuControl()
         {
             InitializeComponent();
         }
 
+        // Tento metod se spustí při kliknutí na tlačítko "Vytvořit globální".
+        // Nejprve zkontroluje, zda je tlačítko povoleno (pouze pro administrátory).
+        // Pokud není povoleno, zobrazí varovnou zprávu o odmítnutí přístupu.
+        // Pokud je povoleno, vymaže obsah panelu a načte formulář CreateGlobalUC.
         private void btnCreateGlobal_Click(object sender, EventArgs e)
         {
             if (!btnCreateGlobal.Enabled)
@@ -47,6 +54,9 @@ namespace Task_manager
             pnlContent.Controls.Add(createUC);
         }
 
+        // Tento metod se spustí při kliknutí na tlačítko "Projekty".
+        // Vymaže obsah panelu a načte seznam projektů pro aktuálního uživatele.
+        // Poté zavolá metod LoadProjects() k načtení dat projektů.
         private void btnProjects_Click(object sender, EventArgs e)
         {
             pnlContent.Controls.Clear();
@@ -58,11 +68,16 @@ namespace Task_manager
             projectsView.LoadProjects();
         }
 
+        // Tento metod se spustí při kliknutí na tlačítko "Menu".
+        // Vymaže obsah panelu a vrátí aplikaci do výchozího stavu.
         private void btnMenu_Click(object sender, EventArgs e)
         {
             pnlContent.Controls.Clear();
         }
 
+        // Tento metod se spustí při kliknutí na tlačítko "Moje Úkoly".
+        // Vymaže obsah panelu a načte seznam úkolů přiřazených aktuálnímu uživateli.
+        // Poté zavolá metod LoadMyTasks() k načtení dat úkolů.
         private void btnMyTask_Click(object sender, EventArgs e)
         {
             MyTask TaskView = new MyTask(_currentUser);

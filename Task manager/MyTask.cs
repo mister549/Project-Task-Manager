@@ -13,16 +13,20 @@ namespace Task_manager
     {
         private User _currentUser;
 
+        // Konstruktor komponenty, který inicializuje ovládací prvky.
         public MyTask()
         {
             InitializeComponent();
         }
 
+        // Konstruktor, který inicializuje komponentu a nastavuje aktuálního uživatele.
         public MyTask(User user) : this()
         {
             _currentUser = user;
         }
 
+        // Načítá seznam všech úkolů přiřazených aktuálnímu uživateli a zobrazuje je jako karty.
+        // Pokud uživatel není přihlášen nebo nemá žádné úkoly, zobrazí odpovídající zprávu.
         public void LoadMyTasks()
         {
             flpMyTask.Controls.Clear();
@@ -59,6 +63,7 @@ namespace Task_manager
             var allTasks = DataManager.GetAllTasks();
             var myTasks = allTasks.Where(t => assignedTaskIds.Contains(t.Id)).ToList();
 
+            // Vytváří karty úkolů pro každý přiřazený úkol a přidává je do panelu.
             foreach (var task in myTasks)
             {
                 TaskCard taskCard = new TaskCard();
@@ -71,6 +76,8 @@ namespace Task_manager
             }
         }
 
+        // Zobrazuje detailní informace o vybraném úkolu.
+        // Umožňuje uživateli vrátit se na seznam úkolů nebo aktualizovat úkol.
         private void ShowTaskDetails(TaskItem task)
         {
             flpMyTask.Controls.Clear();

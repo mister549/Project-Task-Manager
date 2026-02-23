@@ -178,7 +178,6 @@
             Controls.Add(label1);
             Name = "CreateGlobalUC";
             Size = new Size(530, 540);
-            Load += CreateGlobalUC_Load;
             ResumeLayout(false);
             PerformLayout();
         }

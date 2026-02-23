@@ -4,35 +4,33 @@ namespace Task_manager
 {
     public partial class CreateGlobalUC : UserControl
     {
+        // Konstruktor komponenty, který inicializuje ovládací prvky a nastavuje obslužné programy událostí.
+        // Načítá seznam projektů a registruje posluchače pro změny výběru a kliknutí na tlačítka.
         public CreateGlobalUC()
         {
             InitializeComponent();
 
-            // Загружаем список проектов при открытии
             LoadProjectsToSelector();
 
-            // Подписываемся на событие смены выбора проекта
             lbProjectSelector.SelectedIndexChanged += LbProjectSelector_SelectedIndexChanged;
             btnAddStepToList.Click += BtnAddStepToList_Click;
         }
 
-        // --- ОБЩИЕ МЕТОДЫ ---
-
+        // Načítá všechny projekty z úložiště dat a zobrazuje je v seznamu pro výběr.
+        // Nastavuje vlastnosti DisplayMember a ValueMember pro správné zobrazení dat.
         private void LoadProjectsToSelector()
         {
-            // Получаем список объектов
             var projects = DataManager.GetAllProjects();
 
-            // Привязываем данные правильно
-            lbProjectSelector.DataSource = null; // Сброс
+            lbProjectSelector.DataSource = null;
             lbProjectSelector.DataSource = projects;
-            lbProjectSelector.DisplayMember = "Name"; // Что видит пользователь
-            lbProjectSelector.ValueMember = "Id";    // Что мы получаем в коде
-
-            // Убираем автоматический выбор первого проекта
+            lbProjectSelector.DisplayMember = "Name";
+            lbProjectSelector.ValueMember = "Id";
             lbProjectSelector.SelectedIndex = -1;
         }
 
+        // Načítá seznam úkolů pro vybraný projekt a zobrazuje je v seznamu náhledu.
+        // Pokud není vybrán žádný projekt, seznam zůstane prázdný.
         private void LoadTasksForSelectedProject()
         {
             lbTasksPreview.DataSource = null;
@@ -50,13 +48,16 @@ namespace Task_manager
             lbTasksPreview.ValueMember = "Id";
         }
 
+        // Obslužný program pro změnu vybraného projektu v seznamu.
+        // Zavolá metodu LoadTasksForSelectedProject() k aktualizaci seznamu úkolů.
         private void LbProjectSelector_SelectedIndexChanged(object sender, EventArgs e)
         {
             LoadTasksForSelectedProject();
         }
 
-        // --- ЛОГИКА ПРОЕКТОВ ---
-
+        // Vytváří nový projekt na základě zadaného názvu.
+        // Ověřuje, zda není prázdný a zda již neexistuje projekt se stejným názvem.
+        // Pokud je projekt úspěšně vytvořen, aktualizuje seznam projektů.
         private void btnCreateProject_Click(object sender, EventArgs e)
         {
             string name = txtProjectName.Text.Trim();
@@ -67,7 +68,6 @@ namespace Task_manager
                 return;
             }
 
-            // В новом DataManager проверка имени может быть внутри Save или здесь
             if (DataManager.GetAllProjects().Any(p => p.Name.Equals(name, StringComparison.OrdinalIgnoreCase)))
             {
                 MessageBox.Show($"Project '{name}' already exists!", "Duplicate Found", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -76,7 +76,6 @@ namespace Task_manager
 
             try
             {
-                // Используем новый метод сохранения (передаем только имя)
                 DataManager.SaveProject(name);
 
                 MessageBox.Show($"Project '{name}' created!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -91,8 +90,10 @@ namespace Task_manager
             }
         }
 
-        // --- ЛОГИКА ЗАДАЧ ---
-
+        // Vytváří nový úkol pro vybraný projekt.
+        // Ověřuje, zda je vybrán projekt a zda není prázdné jméno úkolu.
+        // Kontroluje, zda úkol se stejným názvem již neexistuje v projektu.
+        // Pokud je úkol úspěšně vytvořen, aktualizuje seznam úkolů.
         private void btnCreateTask_Click(object sender, EventArgs e)
         {
             string taskName = txtTaskName.Text.Trim();
@@ -114,15 +115,13 @@ namespace Task_manager
                 var selectedProject = (Project)lbProjectSelector.SelectedItem;
                 int projectId = selectedProject.Id;
 
-                // --- НОВАЯ ПРОВЕРКА НА ДУБЛИКАТЫ ---
                 if (DataManager.IsTaskTitleExists(projectId, taskName))
                 {
                     MessageBox.Show($"Task '{taskName}' already exists in this project!",
                                     "Duplicate Task", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return; // Прерываем выполнение, задача не сохранится
+                    return;
                 }
 
-                // Если проверки прошли, сохраняем
                 DataManager.SaveTask(projectId, taskName);
 
                 MessageBox.Show($"Task added to {selectedProject.Name}!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -135,8 +134,9 @@ namespace Task_manager
             }
         }
 
-        // --- ЛОГИКА STEPS (SUBTASKS) ---
-
+        // Přidá nový podúkol (krok) k vybranému úkolu.
+        // Ověřuje, zda je vybrán úkol a zda není prázdný popis kroku.
+        // Uloží podúkol do úložiště dat.
         private void BtnAddStepToList_Click(object sender, EventArgs e)
         {
             string stepDescription = txtStepInput.Text.Trim();
@@ -158,7 +158,6 @@ namespace Task_manager
                 var selectedTask = (TaskItem)lbTasksPreview.SelectedItem;
                 int taskId = selectedTask.Id;
 
-                // Сохраняем подзадачу
                 DataManager.AddSubTask(taskId, stepDescription);
 
                 MessageBox.Show($"Step added to task '{selectedTask.Title}'!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -168,11 +167,6 @@ namespace Task_manager
             {
                 MessageBox.Show($"Error: {ex.Message}");
             }
-        }
-
-        private void CreateGlobalUC_Load(object sender, EventArgs e)
-        {
-
         }
     }
 }
